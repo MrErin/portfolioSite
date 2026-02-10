@@ -18,12 +18,12 @@
 - [x] Contact panel component
 
 ## Phase 2: Animation System
-- [ ] Scroll detection (Intersection Observer or Framer Motion inView)
-- [ ] Animation Mode 1: Straight Up (vertical float from bottom)
-- [ ] Animation Mode 2: Diagonal Drift (float up + lateral drift)
+- [ ] Scroll-linked parallax (Framer Motion useScroll + useTransform)
+- [ ] Animation Mode 1: Straight Up (vertical movement tied to scroll)
+- [ ] Animation Mode 2: Diagonal Drift (vertical + alternating lateral movement tied to scroll)
 - [ ] Toggle mechanism to switch between animation modes
-- [ ] Staggered timing (~200ms between cards)
-- [ ] Animation properties: opacity, translateY, scale, rotate, ~800ms ease-out
+- [ ] Cards float past continuously as user scrolls (parallax effect)
+- [ ] prefers-reduced-motion support
 
 ## Phase 3: Interactivity
 - [ ] Card click → modal open (grow-from-card transition)
