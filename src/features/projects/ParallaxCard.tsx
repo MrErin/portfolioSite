@@ -17,8 +17,6 @@ interface ParallaxCardProps {
   totalCards: number;
   /** Project data to display */
   project: Project;
-  /** Whether user prefers reduced motion */
-  prefersReducedMotion: boolean;
 }
 
 /**
@@ -39,7 +37,6 @@ const ParallaxCard = ({
   index,
   totalCards,
   project,
-  prefersReducedMotion,
 }: ParallaxCardProps) => {
   const { mode } = useAnimationMode();
   const config = getParallaxConfig(mode);
@@ -89,17 +86,6 @@ const ParallaxCard = ({
   const horizontalClass = isEven
     ? 'left-[5%] md:left-[10%] lg:left-[15%]'
     : 'right-[5%] md:right-[10%] lg:right-[15%]';
-
-  // For reduced motion, render plain div without transforms
-  // Note: This path is only used if parent component passes true,
-  // but ProjectsSection now handles reduced motion at the section level.
-  if (prefersReducedMotion) {
-    return (
-      <div className="mb-8">
-        <ProjectCard project={project} />
-      </div>
-    );
-  }
 
   return (
     <motion.div

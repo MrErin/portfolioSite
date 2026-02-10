@@ -1,6 +1,6 @@
-import { useMemo } from 'react';
 import { projects } from '../../data/projects';
 import { useScrollProgress } from '../../hooks/useScrollProgress';
+import { useReducedMotion } from '../../hooks/useReducedMotion';
 import ParallaxCard from './ParallaxCard';
 import ProjectCard from './ProjectCard';
 
@@ -16,14 +16,7 @@ import ProjectCard from './ProjectCard';
  * vertical card stack.
  */
 const ProjectsSection = () => {
-  const prefersReducedMotion = useMemo(
-    () =>
-      typeof window !== 'undefined'
-        ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
-        : false,
-    []
-  );
-
+  const prefersReducedMotion = useReducedMotion();
   const { scrollYProgress, ref } = useScrollProgress();
   const totalCards = projects.length;
 
@@ -72,7 +65,6 @@ const ProjectsSection = () => {
             project={project}
             index={index}
             totalCards={totalCards}
-            prefersReducedMotion={false}
           />
         ))}
       </div>

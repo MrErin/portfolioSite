@@ -4,7 +4,7 @@
 **Phase 2: Animation System**
 
 ## Status
-`review` — Built with sticky viewport pattern. Testing document generated. Awaiting user verification.
+`accepted` — Phase 2 accepted. Card 0 scroll timing deferred to Phase 4 (Decision #7). Code cleanup applied post-acceptance.
 
 ## What Was Built
 
@@ -25,7 +25,7 @@ Replaced CSS grid layout with sticky viewport pattern for proper "falling past" 
 ## Phases Complete
 - Phase 0: Project Setup (commit `1f91bc2`)
 - Phase 1: Layout & Structure (commit `2f46c43`)
-- Phase 2: Animation System — **built, pending review**
+- Phase 2: Animation System — **accepted** (Card 0 timing deferred to Phase 4)
 
 ## Blockers
 None.
@@ -40,3 +40,4 @@ None.
 | 2026-02-10 | Rebuilt Phase 2 with scroll-linked parallax — ready for testing |
 | 2026-02-10 | User feedback: grid layout defeats "falling past" effect. Revised Phase 2 plan written with sticky viewport pattern, per-card scroll windows, and absolute positioning. |
 | 2026-02-10 | Rebuilt Phase 2 with sticky viewport pattern. Testing document generated. |
+| 2026-02-10 | Phase 2 accepted. Card 0 timing deferred to Phase 4 (Decision #7). Senior code review + cleanup applied. |

@@ -37,6 +37,7 @@
 - [ ] Background dim when modal/panel open
 
 ## Phase 4: Polish
+- [ ] Fix Card 0 scroll timing (barely visible before fading out — see Decision #7)
 - [ ] Hover states refinement
 - [ ] Focus management (focus trapping in modal)
 - [ ] Keyboard navigation (Tab, Escape, Enter)

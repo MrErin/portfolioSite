@@ -45,6 +45,7 @@ src/
 │       ├── ContactPanel.tsx   # Email/GitHub/LinkedIn links
 │       └── index.ts
 ├── hooks/
+│   ├── useReducedMotion.ts    # Reactive prefers-reduced-motion listener
 │   ├── useScrollProgress.ts   # Framer Motion useScroll wrapper
 │   └── index.ts
 ├── types/
