@@ -1,31 +1,37 @@
 # Project State
 
 ## Current Phase
-**Phase 2: Animation System**
+**Phase 3: Interactivity**
 
 ## Status
-`accepted` — Phase 2 accepted. Card 0 scroll timing deferred to Phase 4 (Decision #7). Code cleanup applied post-acceptance.
+`review` — Phase 3 built. Ready for user testing.
 
 ## What Was Built
 
-Replaced CSS grid layout with sticky viewport pattern for proper "falling past" effect:
+Wired up all user interactions: card click opens modal with grow-from-card animation, FABs open slide-in panels, and all overlays close via backdrop click or Escape key.
 
 ### Key Changes Implemented
-1. **Layout:** Sticky viewport pattern (300vh section + pinned 100vh inner container)
-2. **Scroll windows:** Each card has its own staggered sub-range (35% window size, evenly distributed)
-3. **TranslateY range:** Increased from 150px to 600px for full viewport travel
-4. **Positioning:** Cards absolutely positioned with left/right alternation (responsive: centered on mobile, alternating on desktop)
-5. **Reduced motion:** Separate fallback layout (simple vertical stack)
+1. **Card click → modal**: ProjectCard captures its bounding rect on click, threads through ParallaxCard → ProjectsSection → App
+2. **Grow-from-card animation**: Modal uses card center coordinates to animate from the clicked card's position (scale + opacity + offset)
+3. **SlidePanel component**: Reusable overlay with backdrop, slide-in from right, close button, and click-outside
+4. **Overlay state management**: App.tsx manages selectedProject, cardOrigin, and activePanel state
+5. **Escape key listener**: Single global listener prioritizes modal close over panel close
+6. **Keyboard accessibility**: Cards have role="button", tabIndex=0, and Enter/Space handlers
 
 ### Files Modified
-- `src/data/animationConfig.ts` — Added `getCardScrollWindow()`, `getCardOpacityRange()`, removed shared constants, restructured configs to output-only
-- `src/features/projects/ProjectsSection.tsx` — Replaced grid with sticky viewport pattern, added reduced-motion conditional render
-- `src/features/projects/ParallaxCard.tsx` — Per-card scroll windows, absolute positioning, horizontal alternation, `totalCards` prop
+- `src/components/Fab.tsx` — Added `onClick?: () => void` prop
+- `src/components/SlidePanel.tsx` — **NEW** Reusable slide-in overlay (backdrop + animation + close)
+- `src/features/projects/ProjectCard.tsx` — Added `onClick` prop, ref for rect capture, keyboard handler
+- `src/features/projects/ParallaxCard.tsx` — Added `onProjectClick` prop, forwards to ProjectCard
+- `src/features/projects/ProjectsSection.tsx` — Added props interface, `onProjectClick` prop, forwards to both paths
+- `src/features/projects/ProjectModal.tsx` — Added `cardOrigin` prop, Framer Motion animations, click-outside
+- `src/App.tsx` — Overlay state, handlers, Escape listener, conditional rendering, FAB wiring
 
 ## Phases Complete
 - Phase 0: Project Setup (commit `1f91bc2`)
 - Phase 1: Layout & Structure (commit `2f46c43`)
 - Phase 2: Animation System — **accepted** (Card 0 timing deferred to Phase 4)
+- Phase 3: Interactivity — **awaiting user approval**
 
 ## Blockers
 None.
@@ -41,3 +47,4 @@ None.
 | 2026-02-10 | User feedback: grid layout defeats "falling past" effect. Revised Phase 2 plan written with sticky viewport pattern, per-card scroll windows, and absolute positioning. |
 | 2026-02-10 | Rebuilt Phase 2 with sticky viewport pattern. Testing document generated. |
 | 2026-02-10 | Phase 2 accepted. Card 0 timing deferred to Phase 4 (Decision #7). Senior code review + cleanup applied. |
+| 2026-02-10 | Built Phase 3: Interactivity — card click → modal, FAB → panels, Escape key, all wired. Testing document generated. |

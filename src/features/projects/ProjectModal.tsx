@@ -1,20 +1,40 @@
+import { motion } from 'framer-motion';
 import { FaGithub, FaExternalLinkAlt, FaTimes } from 'react-icons/fa';
 import type { Project } from '../../types/project';
 
 interface ProjectModalProps {
   project: Project;
   onClose: () => void;
+  cardOrigin?: { x: number; y: number } | null;
 }
 
-const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
+const ProjectModal = ({ project, onClose, cardOrigin }: ProjectModalProps) => {
+  // Calculate offset from viewport center for grow-from-card animation
+  const viewportCenterX = typeof window !== 'undefined' ? window.innerWidth / 2 : 0;
+  const viewportCenterY = typeof window !== 'undefined' ? window.innerHeight / 2 : 0;
+  const offsetX = cardOrigin ? cardOrigin.x - viewportCenterX : 0;
+  const offsetY = cardOrigin ? cardOrigin.y - viewportCenterY : 0;
+
   return (
-    <div
+    <motion.div
       role="dialog"
       aria-modal="true"
       aria-label="Project details"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+      onClick={onClose}
       className="fixed inset-0 z-50 bg-abyss/80 flex items-center justify-center p-4"
     >
-      <div className="bg-void border border-border rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto relative">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8, x: offsetX, y: offsetY }}
+        animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+        onClick={(e) => e.stopPropagation()}
+        className="bg-void border border-border rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto relative"
+      >
         {/* Close button */}
         <button
           type="button"
@@ -81,8 +101,8 @@ const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
             )}
           </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

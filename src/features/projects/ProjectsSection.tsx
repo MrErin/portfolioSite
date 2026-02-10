@@ -1,8 +1,13 @@
 import { projects } from '../../data/projects';
 import { useScrollProgress } from '../../hooks/useScrollProgress';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
+import type { Project } from '../../types/project';
 import ParallaxCard from './ParallaxCard';
 import ProjectCard from './ProjectCard';
+
+interface ProjectsSectionProps {
+  onProjectClick?: (project: Project, rect: DOMRect) => void;
+}
 
 /**
  * Projects section with scroll-linked parallax card animations.
@@ -15,7 +20,7 @@ import ProjectCard from './ProjectCard';
  * For users preferring reduced motion, falls back to a simple
  * vertical card stack.
  */
-const ProjectsSection = () => {
+const ProjectsSection = ({ onProjectClick }: ProjectsSectionProps) => {
   const prefersReducedMotion = useReducedMotion();
   const { scrollYProgress, ref } = useScrollProgress();
   const totalCards = projects.length;
@@ -33,7 +38,7 @@ const ProjectsSection = () => {
           </h2>
           <div className="flex flex-col gap-6">
             {projects.map((project) => (
-              <ProjectCard key={project.id} project={project} />
+              <ProjectCard key={project.id} project={project} onClick={onProjectClick} />
             ))}
           </div>
         </div>
@@ -65,6 +70,7 @@ const ProjectsSection = () => {
             project={project}
             index={index}
             totalCards={totalCards}
+            onProjectClick={onProjectClick}
           />
         ))}
       </div>

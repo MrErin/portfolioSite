@@ -19,12 +19,13 @@ Feature-based structure with barrel exports.
 
 ```
 src/
-├── App.tsx                    # Root: skip-link, <main>, AnimationToggle, FABs
+├── App.tsx                    # Root: skip-link, <main>, AnimationToggle, FABs, overlay state, Escape listener
 ├── main.tsx                   # Entry point
 ├── index.css                  # Tailwind v4 @theme + global styles
 ├── components/
 │   ├── AnimationToggle.tsx    # Dev toggle for animation modes (A key + button)
-│   ├── Fab.tsx                # Floating action button (generic)
+│   ├── Fab.tsx                # Floating action button (generic, with onClick)
+│   ├── SlidePanel.tsx         # Reusable slide-in overlay (backdrop + animation + close)
 │   └── index.ts
 ├── context/
 │   └── AnimationModeContext.tsx # Context for current animation mode state
@@ -33,16 +34,16 @@ src/
 │   │   ├── Hero.tsx           # Full-viewport hero with gradient bg
 │   │   └── index.ts
 │   ├── projects/
-│   │   ├── ProjectCard.tsx    # Card with gradient placeholder + tech badges
-│   │   ├── ParallaxCard.tsx   # Wrapper with scroll-linked parallax transforms
-│   │   ├── ProjectModal.tsx   # Dialog with close btn, links, demo placeholder
-│   │   ├── ProjectsSection.tsx# Sticky viewport pattern (300vh + pinned 100vh)
+│   │   ├── ProjectCard.tsx    # Card with gradient placeholder + tech badges, clickable with rect capture
+│   │   ├── ParallaxCard.tsx   # Wrapper with scroll-linked parallax transforms, forwards onProjectClick
+│   │   ├── ProjectModal.tsx   # Dialog with grow-from-card animation, close btn, links, demo placeholder
+│   │   ├── ProjectsSection.tsx# Sticky viewport pattern (300vh + pinned 100vh), forwards onProjectClick
 │   │   └── index.ts
 │   ├── about/
-│   │   ├── AboutPanel.tsx     # Bio, skills badges, photo placeholder
+│   │   ├── AboutPanel.tsx     # Bio, skills badges, photo placeholder (content-only)
 │   │   └── index.ts
 │   └── contact/
-│       ├── ContactPanel.tsx   # Email/GitHub/LinkedIn links
+│       ├── ContactPanel.tsx   # Email/GitHub/LinkedIn links (content-only)
 │       └── index.ts
 ├── hooks/
 │   ├── useReducedMotion.ts    # Reactive prefers-reduced-motion listener
@@ -78,8 +79,12 @@ CSS-first config via `@theme` block in `src/index.css`. Key tokens:
 - Scroll-linked animations via Framer Motion's `useScroll` + `useTransform`
 - Sticky viewport pattern: tall section (300vh) with pinned inner container (100vh)
 - Per-card scroll windows for staggered entry/exit timing
-- FABs rendered in `App.tsx`, not wired to any handlers yet
-- ProjectModal exists structurally but is not rendered anywhere yet
+- Overlay state managed in App.tsx (selectedProject, cardOrigin, activePanel)
+- Grow-from-card modal animation: captures card center on click, animates from that position
+- Slide-in panels: SlidePanel component with backdrop, slide animation, and click-outside
+- Escape key listener in App.tsx: prioritizes modal close, then panel
+- FABs wired to open About/Contact panels
+- Interactive cards: role="button", tabIndex=0, Enter/Space keyboard handlers
 
 ## External Integrations
 

@@ -1,12 +1,36 @@
+import { useRef } from 'react';
 import type { Project } from '../../types/project';
 
 interface ProjectCardProps {
   project: Project;
+  onClick?: (project: Project, rect: DOMRect) => void;
 }
 
-const ProjectCard = ({ project }: ProjectCardProps) => {
+const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
+  const articleRef = useRef<HTMLElement>(null);
+
+  const handleClick = () => {
+    if (onClick && articleRef.current) {
+      onClick(project, articleRef.current.getBoundingClientRect());
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleClick();
+    }
+  };
+
   return (
-    <article className="group overflow-hidden rounded-lg bg-surface border border-border transition-all duration-300 hover:border-[#3d2b5a] hover:bg-surface-bright cursor-pointer">
+    <article
+      ref={articleRef}
+      role="button"
+      tabIndex={0}
+      className="group overflow-hidden rounded-lg bg-surface border border-border transition-all duration-300 hover:border-[#3d2b5a] hover:bg-surface-bright cursor-pointer"
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+    >
       {/* Gradient thumbnail placeholder */}
       <div className="h-40 bg-gradient-to-br from-hollow via-shade to-dusk" aria-hidden="true" />
 

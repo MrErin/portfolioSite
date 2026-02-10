@@ -17,6 +17,8 @@ interface ParallaxCardProps {
   totalCards: number;
   /** Project data to display */
   project: Project;
+  /** Click handler for project card */
+  onProjectClick?: (project: Project, rect: DOMRect) => void;
 }
 
 /**
@@ -37,6 +39,7 @@ const ParallaxCard = ({
   index,
   totalCards,
   project,
+  onProjectClick,
 }: ParallaxCardProps) => {
   const { mode } = useAnimationMode();
   const config = getParallaxConfig(mode);
@@ -98,7 +101,7 @@ const ParallaxCard = ({
         opacity,
       }}
     >
-      <ProjectCard project={project} />
+      <ProjectCard project={project} onClick={onProjectClick} />
     </motion.div>
   );
 };

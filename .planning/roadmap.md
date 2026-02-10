@@ -29,14 +29,19 @@
 - [x] prefers-reduced-motion fallback (static vertical card list)
 
 ## Phase 3: Interactivity
-- [ ] Card click → modal open (grow-from-card transition)
-- [ ] Modal state management (selected project)
-- [ ] Close modal (X button + click outside + Escape key)
-- [ ] FAB click → About panel reveal (slide-in or overlay)
-- [ ] FAB click → Contact panel reveal
-- [ ] Background dim when modal/panel open
+- [x] Card click → modal open (grow-from-card transition)
+- [x] Modal state management (selected project)
+- [x] Close modal (X button + click outside + Escape key)
+- [x] FAB click → About panel reveal (slide-in or overlay)
+- [x] FAB click → Contact panel reveal
+- [x] Background dim when modal/panel open
 
 ## Phase 4: Polish
+- [ ] Remove AnimationToggle component and all related code (AnimationModeContext, A key handler, mode state)
+- [ ] Set scroll effect to Diagonal Drift only (remove mode switching)
+- [ ] Make diagonal drift effect more pronounced (increase horizontal drift and/or rotation)
+- [ ] Condense FABs to single email button
+- [ ] Combine About + Contact into single panel (About at top, Contact beneath)
 - [ ] Fix Card 0 scroll timing (barely visible before fading out — see Decision #7)
 - [ ] Hover states refinement
 - [ ] Focus management (focus trapping in modal)
