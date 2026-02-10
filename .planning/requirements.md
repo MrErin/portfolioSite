@@ -46,7 +46,7 @@ Hybrid approach:
 - Alternating directions (or random slight variance)
 - More chaotic "tumbling through space" feel
 
-**Implementation**: 
+**Implementation**:
 - Create a config constant or prop that switches between modes
 - Button or keyboard shortcut to toggle (for rapid testing)
 - Both modes should use same easing/timing structure for fair comparison
@@ -56,10 +56,10 @@ Hybrid approach:
 - Trigger when 20-30% enters viewport
 - Staggered timing (each appears ~200ms after previous)
 - Animation properties:
-  - Opacity: 0 → 1
-  - Transform: translateY + scale + rotate (subtle)
-  - Duration: ~800ms
-  - Easing: ease-out or custom cubic-bezier
+    - Opacity: 0 → 1
+    - Transform: translateY + scale + rotate (subtle)
+    - Duration: ~800ms
+    - Easing: ease-out or custom cubic-bezier
 
 ### Visual Mood (No Images Yet)
 - Dark background (deep purples, dark blues, near-black)
@@ -79,10 +79,10 @@ Hybrid approach:
 ### Projects Section
 - 3-4 project cards
 - Each card shows:
-  - Project name
-  - Tech stack (small badges/chips)
-  - Thumbnail or gradient placeholder
-  - Subtle hover effect
+    - Project name
+    - Tech stack (small badges/chips)
+    - Thumbnail or gradient placeholder
+    - Subtle hover effect
 - Cards positioned for scroll animation
 
 ### Project Modal Content
@@ -92,8 +92,8 @@ When card clicked:
 - Tech stack (badges)
 - Demo section (iframe or image placeholder for now)
 - Links:
-  - View Repository (GitHub icon)
-  - Live Demo (if applicable)
+    - View Repository (GitHub icon)
+    - Live Demo (if applicable)
 - Close button (X in corner)
 
 ### About/Contact Sections
