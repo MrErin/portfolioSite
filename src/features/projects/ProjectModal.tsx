@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { FaGithub, FaExternalLinkAlt, FaTimes } from 'react-icons/fa';
 import type { Project } from '../../types/project';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
 
 interface ProjectModalProps {
   project: Project;
@@ -9,6 +10,8 @@ interface ProjectModalProps {
 }
 
 const ProjectModal = ({ project, onClose, cardOrigin }: ProjectModalProps) => {
+  const focusTrapRef = useFocusTrap({ isActive: true });
+
   // Calculate offset from viewport center for grow-from-card animation
   const viewportCenterX = typeof window !== 'undefined' ? window.innerWidth / 2 : 0;
   const viewportCenterY = typeof window !== 'undefined' ? window.innerHeight / 2 : 0;
@@ -28,6 +31,7 @@ const ProjectModal = ({ project, onClose, cardOrigin }: ProjectModalProps) => {
       className="fixed inset-0 z-50 bg-abyss/80 flex items-center justify-center p-4"
     >
       <motion.div
+        ref={focusTrapRef}
         initial={{ opacity: 0, scale: 0.8, x: offsetX, y: offsetY }}
         animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
         exit={{ opacity: 0, scale: 0.95 }}
@@ -52,7 +56,7 @@ const ProjectModal = ({ project, onClose, cardOrigin }: ProjectModalProps) => {
         />
 
         {/* Content area */}
-        <div className="p-8">
+        <div className="p-6 md:p-8">
           <h2 className="font-display text-gold text-3xl mb-4">{project.name}</h2>
 
           <p className="font-body text-text-secondary leading-relaxed mb-6">
@@ -82,7 +86,7 @@ const ProjectModal = ({ project, onClose, cardOrigin }: ProjectModalProps) => {
               href={project.repoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-surface border border-border rounded hover:border-purple hover:text-purple-glow transition-all duration-300"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-surface border border-border rounded hover:border-purple-dark hover:text-purple-glow hover:shadow-glow-purple transition-all duration-300"
             >
               <FaGithub />
               <span>View Repository</span>
@@ -93,7 +97,7 @@ const ProjectModal = ({ project, onClose, cardOrigin }: ProjectModalProps) => {
                 href={project.demoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-surface border border-border rounded hover:border-purple hover:text-purple-glow transition-all duration-300"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-surface border border-border rounded hover:border-purple-dark hover:text-purple-glow hover:shadow-glow-purple transition-all duration-300"
               >
                 <FaExternalLinkAlt />
                 <span>Live Demo</span>

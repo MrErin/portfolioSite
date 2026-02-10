@@ -19,8 +19,9 @@
   --color-dusk: #2b2a62;
 
   /* Purple range: atmospheric "rabbit hole" descent */
-  --color-purple-dark: #3d2b5a;
-  --color-purple: #6b4c8a;
+  /* Dark end near-black for deep gradients; lightest background shade ~old purple-dark */
+  --color-purple-dark: #150d24;
+  --color-purple: #3d2b5a;
   --color-purple-light: #9b7eb4;
   --color-purple-glow: #c9a8db;
 
@@ -150,4 +151,26 @@ button {
   cursor: pointer;
   border: none;
   background: none;
+}
+
+/* Floating particle animation */
+@keyframes float {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.4;
+  }
+  90% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(20px);
+    opacity: 0;
+  }
+}
+
+.animate-float {
+  animation: float linear infinite;
 }

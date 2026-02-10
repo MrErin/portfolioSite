@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import type { ReactNode } from 'react';
 import { FaTimes } from 'react-icons/fa';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 
 interface SlidePanelProps {
   children: ReactNode;
@@ -19,6 +20,7 @@ interface SlidePanelProps {
  * - Escape key handling is managed by parent (App.tsx)
  */
 const SlidePanel = ({ children, onClose, ariaLabel }: SlidePanelProps) => {
+  const focusTrapRef = useFocusTrap({ isActive: true });
   return (
     <>
       {/* Backdrop */}
@@ -34,6 +36,7 @@ const SlidePanel = ({ children, onClose, ariaLabel }: SlidePanelProps) => {
 
       {/* Slide-in panel */}
       <motion.div
+        ref={focusTrapRef}
         initial={{ x: '100%' }}
         animate={{ x: 0 }}
         exit={{ x: '100%' }}

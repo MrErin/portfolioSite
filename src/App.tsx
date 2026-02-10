@@ -1,19 +1,18 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import { FaUser, FaEnvelope } from 'react-icons/fa';
+import { FaEnvelope } from 'react-icons/fa';
 import type { Project } from './types/project';
 import { Hero } from './features/hero';
 import { ProjectsSection, ProjectModal } from './features/projects';
 import { AboutPanel } from './features/about';
 import { ContactPanel } from './features/contact';
-import { Fab, AnimationToggle, SlidePanel } from './components';
-import { AnimationModeProvider } from './context/AnimationModeContext';
+import { Fab, SlidePanel } from './components';
 
 const App = () => {
   // Overlay state
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [cardOrigin, setCardOrigin] = useState<{ x: number; y: number } | null>(null);
-  const [activePanel, setActivePanel] = useState<'about' | 'contact' | null>(null);
+  const [panelOpen, setPanelOpen] = useState(false);
 
   // Handlers
   const handleProjectClick = (project: Project, rect: DOMRect) => {
@@ -29,18 +28,13 @@ const App = () => {
     setCardOrigin(null);
   };
 
-  const handleOpenAbout = () => {
-    setActivePanel('about');
-    handleCloseModal(); // Close modal if open
-  };
-
-  const handleOpenContact = () => {
-    setActivePanel('contact');
-    handleCloseModal(); // Close modal if open
-  };
-
   const handleClosePanel = () => {
-    setActivePanel(null);
+    setPanelOpen(false);
+  };
+
+  const handleOpenPanel = () => {
+    setPanelOpen(true);
+    handleCloseModal(); // Close modal if open
   };
 
   // Escape key handler
@@ -58,7 +52,7 @@ const App = () => {
         // Priority: close modal first, then panel
         if (selectedProject) {
           handleCloseModal();
-        } else if (activePanel) {
+        } else if (panelOpen) {
           handleClosePanel();
         }
       }
@@ -66,10 +60,10 @@ const App = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedProject, activePanel]);
+  }, [selectedProject, panelOpen]);
 
   return (
-    <AnimationModeProvider>
+    <>
       <a href="#main-content" className="skip-link">
         Skip to main content
       </a>
@@ -78,17 +72,9 @@ const App = () => {
         <ProjectsSection onProjectClick={handleProjectClick} />
       </main>
 
-      {/* Animation mode toggle */}
-      <AnimationToggle />
-
       {/* FAB navigation */}
-      <div
-        className="fixed bottom-6 right-6 flex flex-col gap-3 z-40"
-        role="group"
-        aria-label="Quick navigation"
-      >
-        <Fab icon={<FaUser />} label="Open about panel" onClick={handleOpenAbout} />
-        <Fab icon={<FaEnvelope />} label="Open contact panel" onClick={handleOpenContact} />
+      <div className="fixed bottom-6 right-6 z-40">
+        <Fab icon={<FaEnvelope />} label="Open about & contact" onClick={handleOpenPanel} />
       </div>
 
       {/* Project modal */}
@@ -102,24 +88,17 @@ const App = () => {
         )}
       </AnimatePresence>
 
-      {/* About panel */}
+      {/* Combined About & Contact panel */}
       <AnimatePresence>
-        {activePanel === 'about' && (
-          <SlidePanel onClose={handleClosePanel} ariaLabel="About">
+        {panelOpen && (
+          <SlidePanel onClose={handleClosePanel} ariaLabel="About and Contact">
             <AboutPanel />
-          </SlidePanel>
-        )}
-      </AnimatePresence>
-
-      {/* Contact panel */}
-      <AnimatePresence>
-        {activePanel === 'contact' && (
-          <SlidePanel onClose={handleClosePanel} ariaLabel="Contact">
+            <div className="border-t border-border my-6" aria-hidden="true" />
             <ContactPanel />
           </SlidePanel>
         )}
       </AnimatePresence>
-    </AnimationModeProvider>
+    </>
   );
 };
 

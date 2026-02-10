@@ -19,41 +19,40 @@ Feature-based structure with barrel exports.
 
 ```
 src/
-├── App.tsx                    # Root: skip-link, <main>, AnimationToggle, FABs, overlay state, Escape listener
+├── App.tsx                    # Root: skip-link, <main>, FAB, overlay state (selectedProject, cardOrigin, panelOpen), Escape listener
 ├── main.tsx                   # Entry point
-├── index.css                  # Tailwind v4 @theme + global styles
+├── index.css                  # Tailwind v4 @theme + global styles + @keyframes float
 ├── components/
-│   ├── AnimationToggle.tsx    # Dev toggle for animation modes (A key + button)
-│   ├── Fab.tsx                # Floating action button (generic, with onClick)
-│   ├── SlidePanel.tsx         # Reusable slide-in overlay (backdrop + animation + close)
+│   ├── Fab.tsx                # Floating action button (email icon, opens combined panel)
+│   ├── SlidePanel.tsx         # Reusable slide-in overlay with focus trap (backdrop + animation + close)
+│   ├── ParticleField.tsx      # Decorative floating dots (respects prefers-reduced-motion)
 │   └── index.ts
-├── context/
-│   └── AnimationModeContext.tsx # Context for current animation mode state
 ├── features/
 │   ├── hero/
-│   │   ├── Hero.tsx           # Full-viewport hero with gradient bg
+│   │   ├── Hero.tsx           # Full-viewport hero with gradient bg + ParticleField
 │   │   └── index.ts
 │   ├── projects/
-│   │   ├── ProjectCard.tsx    # Card with gradient placeholder + tech badges, clickable with rect capture
-│   │   ├── ParallaxCard.tsx   # Wrapper with scroll-linked parallax transforms, forwards onProjectClick
-│   │   ├── ProjectModal.tsx   # Dialog with grow-from-card animation, close btn, links, demo placeholder
-│   │   ├── ProjectsSection.tsx# Sticky viewport pattern (300vh + pinned 100vh), forwards onProjectClick
+│   │   ├── ProjectCard.tsx    # Card with gradient placeholder + tech badges, purple glow on hover, clickable with rect capture
+│   │   ├── ParallaxCard.tsx   # Wrapper with scroll-linked parallax transforms (PARALLAX_CONFIG), forwards onProjectClick
+│   │   ├── ProjectModal.tsx   # Dialog with grow-from-card animation, focus trap, close btn, links, demo placeholder
+│   │   ├── ProjectsSection.tsx# Sticky viewport pattern (200vh mobile + pinned 100vh), forwards onProjectClick
 │   │   └── index.ts
 │   ├── about/
-│   │   ├── AboutPanel.tsx     # Bio, skills badges, photo placeholder (content-only)
+│   │   ├── AboutPanel.tsx     # Bio, skills badges, photo placeholder (section for combined panel)
 │   │   └── index.ts
 │   └── contact/
-│       ├── ContactPanel.tsx   # Email/GitHub/LinkedIn links (content-only)
+│       ├── ContactPanel.tsx   # Email/GitHub/LinkedIn links (section for combined panel)
 │       └── index.ts
 ├── hooks/
 │   ├── useReducedMotion.ts    # Reactive prefers-reduced-motion listener
 │   ├── useScrollProgress.ts   # Framer Motion useScroll wrapper
+│   ├── useFocusTrap.ts        # Focus trap for overlays (save/restore focus, Tab cycle)
 │   └── index.ts
 ├── types/
 │   ├── project.ts             # Project interface
 │   └── index.ts
 └── data/
-    ├── animationConfig.ts     # Parallax configs, scroll window calculators
+    ├── animationConfig.ts     # PARALLAX_CONFIG (diagonal drift only), scroll window calculators with INITIAL_DELAY
     └── projects.ts            # 4 mock projects (themed names)
 ```
 
@@ -71,20 +70,24 @@ CSS-first config via `@theme` block in `src/index.css`. Key tokens:
 ## Patterns
 
 - Arrow function components with explicit prop interfaces
-- Semantic HTML (`<section>`, `<article>`, `<aside>`, `<nav>`)
+- Semantic HTML (`<section>`, `<article>`, `<nav>`, `<dialog>`)
 - ARIA labels on all interactive elements and landmarks
 - Skip-link for keyboard navigation
 - Barrel exports from feature directories (`index.ts`)
-- Animation mode state managed via React Context (`AnimationModeContext`)
+- **Single animation mode:** Diagonal Drift hardcoded (PARALLAX_CONFIG)
 - Scroll-linked animations via Framer Motion's `useScroll` + `useTransform`
-- Sticky viewport pattern: tall section (300vh) with pinned inner container (100vh)
-- Per-card scroll windows for staggered entry/exit timing
-- Overlay state managed in App.tsx (selectedProject, cardOrigin, activePanel)
+- Sticky viewport pattern: tall section (200vh mobile, 300vh desktop) with pinned inner container (100vh)
+- Per-card scroll windows for staggered entry/exit timing with INITIAL_DELAY buffer
+- Overlay state managed in App.tsx (selectedProject, cardOrigin, panelOpen boolean)
+- **Focus trapping:** useFocusTrap hook on ProjectModal and SlidePanel
 - Grow-from-card modal animation: captures card center on click, animates from that position
-- Slide-in panels: SlidePanel component with backdrop, slide animation, and click-outside
+- Slide-in panel: SlidePanel component with backdrop, slide animation, focus trap, and click-outside
 - Escape key listener in App.tsx: prioritizes modal close, then panel
-- FABs wired to open About/Contact panels
+- Single email FAB opens combined About & Contact panel with visual divider
 - Interactive cards: role="button", tabIndex=0, Enter/Space keyboard handlers
+- **Purple glow hover:** shadow-glow-purple on cards, FAB, and modal links
+- **Responsive:** Mobile-first with Tailwind breakpoints (sm, md, lg)
+- **Particles:** CSS float animation in Hero, disabled with prefers-reduced-motion
 
 ## External Integrations
 

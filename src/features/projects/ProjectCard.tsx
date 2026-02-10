@@ -27,7 +27,7 @@ const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
       ref={articleRef}
       role="button"
       tabIndex={0}
-      className="group overflow-hidden rounded-lg bg-surface border border-border transition-all duration-300 hover:border-[#3d2b5a] hover:bg-surface-bright cursor-pointer"
+      className="group overflow-hidden rounded-lg bg-surface border border-border transition-all duration-300 hover:border-purple-dark hover:shadow-glow-purple hover:bg-surface-bright cursor-pointer"
       onClick={handleClick}
       onKeyDown={handleKeyDown}
     >

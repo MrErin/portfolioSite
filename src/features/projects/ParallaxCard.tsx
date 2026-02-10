@@ -1,8 +1,7 @@
 import { motion, useTransform, type MotionValue } from 'framer-motion';
 import type { Project } from '../../types/project';
-import { useAnimationMode } from '../../context/AnimationModeContext';
 import {
-  getParallaxConfig,
+  PARALLAX_CONFIG,
   getCardScrollWindow,
   getCardOpacityRange,
 } from '../../data/animationConfig';
@@ -28,9 +27,7 @@ interface ParallaxCardProps {
  * own scroll window. This creates the "falling past objects in a deep well"
  * sensation where cards enter and exit sequentially.
  *
- * Supports two animation modes:
- * - Straight Up: vertical movement only, subtle rotation
- * - Diagonal Drift: vertical + alternating horizontal drift, more rotation
+ * Cards move with diagonal drift: vertical travel plus alternating left/right drift.
  *
  * Cards alternate left/right positioning on desktop, centered on mobile.
  */
@@ -41,9 +38,6 @@ const ParallaxCard = ({
   project,
   onProjectClick,
 }: ParallaxCardProps) => {
-  const { mode } = useAnimationMode();
-  const config = getParallaxConfig(mode);
-
   // Each card gets its own scroll window for staggered entry/exit
   const { start: scrollStart, end: scrollEnd } = getCardScrollWindow(index, totalCards);
 
@@ -55,28 +49,27 @@ const ParallaxCard = ({
   const translateY = useTransform(
     scrollYProgress,
     [scrollStart, scrollEnd],
-    config.translateYOutput
+    PARALLAX_CONFIG.translateYOutput
   );
 
   // Rotation applied within the card's scroll window
   const rotate = useTransform(
     scrollYProgress,
     [scrollStart, scrollEnd],
-    config.rotateOutput
+    PARALLAX_CONFIG.rotateOutput
   );
 
   // Scale pulse applied within the card's scroll window
   const scale = useTransform(
     scrollYProgress,
     [scrollStart, scrollEnd],
-    config.scaleOutput
+    PARALLAX_CONFIG.scaleOutput
   );
 
-  // Horizontal movement - depends on mode and card index
-  // In diagonal-drift mode, odd cards get opposite direction
-  const translateXOutput = mode === 'diagonal-drift' && index % 2 === 1
-    ? config.translateXOutput.map((v) => -v)
-    : config.translateXOutput;
+  // Horizontal movement - odd cards get opposite direction for alternating drift
+  const translateXOutput = index % 2 === 1
+    ? PARALLAX_CONFIG.translateXOutput.map((v) => -v)
+    : PARALLAX_CONFIG.translateXOutput;
 
   const translateX = useTransform(
     scrollYProgress,
@@ -85,14 +78,15 @@ const ParallaxCard = ({
   );
 
   // Horizontal positioning: even cards on left, odd cards on right (desktop only)
+  // Positioned closer to center on larger screens
   const isEven = index % 2 === 0;
   const horizontalClass = isEven
-    ? 'left-[5%] md:left-[10%] lg:left-[15%]'
-    : 'right-[5%] md:right-[10%] lg:right-[15%]';
+    ? 'left-[5%] md:left-[25%] lg:left-[35%]'
+    : 'right-[5%] md:right-[25%] lg:right-[35%]';
 
   return (
     <motion.div
-      className={`absolute w-full max-w-sm md:max-w-md ${horizontalClass}`}
+      className={`absolute w-[90%] max-w-sm md:max-w-md ${horizontalClass}`}
       style={{
         y: translateY,
         x: translateX,

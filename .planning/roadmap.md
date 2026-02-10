@@ -37,16 +37,16 @@
 - [x] Background dim when modal/panel open
 
 ## Phase 4: Polish
-- [ ] Remove AnimationToggle component and all related code (AnimationModeContext, A key handler, mode state)
-- [ ] Set scroll effect to Diagonal Drift only (remove mode switching)
-- [ ] Make diagonal drift effect more pronounced (increase horizontal drift and/or rotation)
-- [ ] Condense FABs to single email button
-- [ ] Combine About + Contact into single panel (About at top, Contact beneath)
-- [ ] Fix Card 0 scroll timing (barely visible before fading out — see Decision #7)
-- [ ] Hover states refinement
-- [ ] Focus management (focus trapping in modal)
-- [ ] Keyboard navigation (Tab, Escape, Enter)
-- [ ] Responsive breakpoints (mobile stack, tablet 2-col, desktop full)
-- [ ] Dark mood styling refinement
-- [ ] Subtle particle effects or floating dots (optional)
-- [ ] Final accessibility audit
+- [x] Remove AnimationToggle component and all related code (AnimationModeContext, A key handler, mode state)
+- [x] Set scroll effect to Diagonal Drift only (remove mode switching)
+- [x] Make diagonal drift effect more pronounced (increase horizontal drift and/or rotation)
+- [x] Condense FABs to single email button
+- [x] Combine About + Contact into single panel (About at top, Contact beneath)
+- [x] Fix Card 0 scroll timing (barely visible before fading out — see Decision #7)
+- [x] Hover states refinement
+- [x] Focus management (focus trapping in modal)
+- [x] Keyboard navigation (Tab, Escape, Enter)
+- [x] Responsive breakpoints (mobile stack, tablet 2-col, desktop full)
+- [x] Dark mood styling refinement
+- [x] Subtle particle effects or floating dots (optional)
+- [x] Final accessibility audit

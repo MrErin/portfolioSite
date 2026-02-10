@@ -2,7 +2,7 @@ const AboutPanel = () => {
   const skills = ['React', 'TypeScript', 'Node.js', 'Rust', 'Go', 'Tailwind CSS', 'Framer Motion'];
 
   return (
-    <aside aria-label="About" className="bg-void border border-border rounded-lg p-6">
+    <section aria-label="About">
       <h2 className="font-heading text-gold text-2xl mb-6">About</h2>
 
       {/* Photo placeholder */}
@@ -32,7 +32,7 @@ const AboutPanel = () => {
           ))}
         </div>
       </div>
-    </aside>
+    </section>
   );
 };
 

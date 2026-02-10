@@ -2,7 +2,7 @@ import { FaEnvelope, FaGithub, FaLinkedin } from 'react-icons/fa';
 
 const ContactPanel = () => {
   return (
-    <aside aria-label="Contact" className="bg-void border border-border rounded-lg p-6">
+    <section aria-label="Contact">
       <h2 className="font-heading text-teal-light text-2xl mb-6">Contact</h2>
 
       <nav aria-label="Contact links">
@@ -46,7 +46,7 @@ const ContactPanel = () => {
           </li>
         </ul>
       </nav>
-    </aside>
+    </section>
   );
 };
 

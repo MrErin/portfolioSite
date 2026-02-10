@@ -1,6 +1,8 @@
 import { projects } from '../../data/projects';
+import { SECTION_HEIGHT_VH } from '../../data/animationConfig';
 import { useScrollProgress } from '../../hooks/useScrollProgress';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
+import { ParticleField } from '../../components';
 import type { Project } from '../../types/project';
 import ParallaxCard from './ParallaxCard';
 import ProjectCard from './ProjectCard';
@@ -52,11 +54,14 @@ const ProjectsSection = ({ onProjectClick }: ProjectsSectionProps) => {
       ref={ref}
       aria-label="Projects"
       // Tall section provides scroll runway for parallax effect
+      // Reduced height on mobile for shorter scroll distance
       className="relative bg-deep"
-      style={{ height: '300vh' }}
+      style={{ height: `${SECTION_HEIGHT_VH}vh` }}
     >
       {/* Sticky container stays pinned while scrolling through the tall section */}
       <div className="sticky top-0 h-screen overflow-hidden flex items-center justify-center">
+        <ParticleField />
+
         {/* Heading stays visible throughout the scroll */}
         <h2 className="absolute top-8 z-10 font-heading text-purple-light text-4xl text-center">
           Projects
