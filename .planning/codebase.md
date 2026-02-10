@@ -35,7 +35,7 @@ src/
 │   │   ├── ProjectCard.tsx    # Card with gradient placeholder + tech badges, purple glow on hover, clickable with rect capture
 │   │   ├── ParallaxCard.tsx   # Wrapper with scroll-linked parallax transforms (PARALLAX_CONFIG), forwards onProjectClick
 │   │   ├── ProjectModal.tsx   # Dialog with grow-from-card animation, focus trap, close btn, links, demo placeholder
-│   │   ├── ProjectsSection.tsx# Sticky viewport pattern (200vh mobile + pinned 100vh), forwards onProjectClick
+│   │   ├── ProjectsSection.tsx# Sticky viewport pattern (SECTION_HEIGHT_VH + pinned 100vh), forwards onProjectClick
 │   │   └── index.ts
 │   ├── about/
 │   │   ├── AboutPanel.tsx     # Bio, skills badges, photo placeholder (section for combined panel)
@@ -52,7 +52,7 @@ src/
 │   ├── project.ts             # Project interface
 │   └── index.ts
 └── data/
-    ├── animationConfig.ts     # PARALLAX_CONFIG (diagonal drift only), scroll window calculators with INITIAL_DELAY
+    ├── animationConfig.ts     # PARALLAX_CONFIG, SECTION_HEIGHT_VH, sticky-range-aware scroll window calculators
     └── projects.ts            # 4 mock projects (themed names)
 ```
 
@@ -76,8 +76,8 @@ CSS-first config via `@theme` block in `src/index.css`. Key tokens:
 - Barrel exports from feature directories (`index.ts`)
 - **Single animation mode:** Diagonal Drift hardcoded (PARALLAX_CONFIG)
 - Scroll-linked animations via Framer Motion's `useScroll` + `useTransform`
-- Sticky viewport pattern: tall section (200vh mobile, 300vh desktop) with pinned inner container (100vh)
-- Per-card scroll windows for staggered entry/exit timing with INITIAL_DELAY buffer
+- Sticky viewport pattern: tall section (SECTION_HEIGHT_VH, currently 400vh) with pinned inner container (100vh)
+- Per-card scroll windows restricted to the sticky-pinned range (progress ~0.20→0.80), with WINDOW_RATIO and INNER_PAD_RATIO controls
 - Overlay state managed in App.tsx (selectedProject, cardOrigin, panelOpen boolean)
 - **Focus trapping:** useFocusTrap hook on ProjectModal and SlidePanel
 - Grow-from-card modal animation: captures card center on click, animates from that position
@@ -87,7 +87,7 @@ CSS-first config via `@theme` block in `src/index.css`. Key tokens:
 - Interactive cards: role="button", tabIndex=0, Enter/Space keyboard handlers
 - **Purple glow hover:** shadow-glow-purple on cards, FAB, and modal links
 - **Responsive:** Mobile-first with Tailwind breakpoints (sm, md, lg)
-- **Particles:** CSS float animation in Hero, disabled with prefers-reduced-motion
+- **Particles:** CSS float animation in Hero and ProjectsSection, 60 particles per instance, disabled with prefers-reduced-motion
 
 ## External Integrations
 
