@@ -1,15 +1,15 @@
+import { projects } from '../../data/projects';
+import ProjectCard from './ProjectCard';
+
 const ProjectsSection = () => {
   return (
-    <section aria-label="Projects" className="min-h-screen bg-void py-20 px-4">
+    <section aria-label="Projects" className="min-h-screen bg-deep py-20 px-4 pr-20 pb-36 md:pr-4 md:pb-20">
       <div className="max-w-6xl mx-auto">
         <h2 className="font-heading text-purple-light text-4xl mb-12 text-center">Projects</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-surface border border-border rounded-lg p-6">
-            <h3 className="font-heading text-text-primary text-xl">Project 1</h3>
-          </div>
-          <div className="bg-surface border border-border rounded-lg p-6">
-            <h3 className="font-heading text-text-primary text-xl">Project 2</h3>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {projects.map((project) => (
+            <ProjectCard key={project.id} project={project} />
+          ))}
         </div>
       </div>
     </section>

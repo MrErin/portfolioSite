@@ -1,8 +1,33 @@
-const ProjectCard = () => {
+import type { Project } from '../../types/project';
+
+interface ProjectCardProps {
+  project: Project;
+}
+
+const ProjectCard = ({ project }: ProjectCardProps) => {
   return (
-    <article className="bg-surface border border-border rounded-lg p-6">
-      <h3 className="font-heading text-text-primary text-2xl mb-2">Project Placeholder</h3>
-      <p className="font-body text-text-secondary">Card content goes here</p>
+    <article className="group overflow-hidden rounded-lg bg-surface border border-border transition-all duration-300 hover:border-[#3d2b5a] hover:bg-surface-bright cursor-pointer">
+      {/* Gradient thumbnail placeholder */}
+      <div className="h-40 bg-gradient-to-br from-hollow via-shade to-dusk" aria-hidden="true" />
+
+      {/* Card content */}
+      <div className="p-6">
+        <h3 className="font-heading text-text-primary text-xl mb-3 transition-colors duration-300 group-hover:text-gold">
+          {project.name}
+        </h3>
+
+        {/* Tech stack badges */}
+        <div className="flex flex-wrap gap-2">
+          {project.techStack.map((tech) => (
+            <span
+              key={tech}
+              className="px-2 py-1 text-xs text-purple-light bg-surface-dim border border-border rounded"
+            >
+              {tech}
+            </span>
+          ))}
+        </div>
+      </div>
     </article>
   );
 };

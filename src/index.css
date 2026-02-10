@@ -60,6 +60,9 @@
   --color-focus-ring: #9b7eb4;
   --color-link: #c9a8db;
   --color-link-hover: #e6d6f0;
+
+  /* Custom shadows */
+  --shadow-glow-purple: 0 0 12px rgba(155, 126, 180, 0.3);
 }
 
 /* Base styles */
