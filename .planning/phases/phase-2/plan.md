@@ -1,143 +1,288 @@
-# Phase 2: Animation System — Plan
+# Phase 2: Animation System — Revised Plan
 
-## Context
+## Problem with Current Implementation
 
-Phase 1 delivered static layout: Hero, ProjectsSection (2-col grid of ProjectCards), FABs, modal structure, About/Contact panels. No animations or interactivity exist yet. Phase 2 is marked as **PRIORITY** in requirements — the core "falling down the rabbit hole" experience.
+The current build places cards in a CSS grid (`grid grid-cols-1 md:grid-cols-2 gap-8`). The parallax transforms move cards within their grid cells (translateY: 150px to -150px), but the grid layout defeats the "falling past" effect because:
 
-**Approach Change (2026-02-10):** Initial plan used scroll-triggered animations (IntersectionObserver). User feedback indicated this is incorrect. The desired effect is **scroll-linked parallax** — as the user scrolls, cards float past continuously. This creates the "falling" sensation tied to scroll position, not a one-time entrance animation.
+1. **Cards are packed in adjacent cells** — they sit side-by-side, not floating in space
+2. **All cards share the same scroll window `[0, 1]`** — they all move in lockstep, entering and exiting together
+3. **TranslateY range is too small** — 150px of movement within a grid cell feels like a wobble, not a fall
+4. **No sequential appearance** — the "falling past objects" sensation requires cards to enter one at a time, not all at once
 
 ## Goal
 
-Implement scroll-linked parallax animations on project cards where card position is directly tied to scroll progress. Two toggleable modes (Straight Up and Diagonal Drift) and a mechanism to quickly switch between modes during development.
+Restructure the layout so cards float up individually from below the viewport as the user scrolls, creating the "falling past objects in a deep well" sensation. Each card enters and exits at a different scroll point. Two toggleable modes (Straight Up and Diagonal Drift) control movement style.
 
----
+## Architecture: Sticky Viewport Pattern
+
+The core technique uses a tall section with a pinned inner viewport:
+
+```
+┌──────────────────────────────────────────┐
+│  <section>  height: 300vh               │  ← Tall section creates scroll runway
+│                                          │
+│  ┌──────────────────────────────────┐    │
+│  │  <div sticky>  height: 100vh     │    │  ← Stays pinned to viewport while
+│  │                                  │    │     user scrolls through the 300vh
+│  │    ┌─────────┐                   │    │     section
+│  │    │ Card 2  │   (exiting ↑)     │    │
+│  │    └─────────┘                   │    │
+│  │              ┌─────────┐         │    │  ← Cards float through this viewport
+│  │              │ Card 3  │ (center)│    │     at staggered times
+│  │              └─────────┘         │    │
+│  │    ┌─────────┐                   │    │
+│  │    │ Card 4  │   (entering ↑)    │    │
+│  │    └─────────┘                   │    │
+│  └──────────────────────────────────┘    │
+│                                          │
+└──────────────────────────────────────────┘
+```
+
+**How it works:**
+- The `<section>` is ~300vh tall, providing scroll distance
+- Inside, a `position: sticky; top: 0; height: 100vh` container stays pinned to the viewport
+- `useScroll` tracks progress through the tall section (0 → 1)
+- Each card maps to its own sub-range of that progress
+- Within its range, each card's `translateY` goes from +600px (below) through 0 (centered) to -600px (above)
+- Cards appear to float up through the pinned viewport one after another
 
 ## Tasks
 
-### 1. Rewrite animation config module
-**File:** `src/data/animationConfig.ts` (full rewrite — only the `AnimationMode` type survives)
+### Task 1: Add per-card scroll window calculator to animation config
 
-The current file exports Framer Motion `Variants` objects (`straightUpVariants`, `diagonalDriftVariants`, `getVariants`, `getStaggerDelay`, `ANIMATION_TIMING`). None of these are relevant to the scroll-linked approach. Replace entirely with:
+**File:** `src/data/animationConfig.ts`
+**Action:** Add a `getCardScrollWindow` function and a `getCardOpacityRange` function. Update translateY output range to be much larger.
 
-- `AnimationMode` type: `'straight-up' | 'diagonal-drift'`
-- Per-mode parallax config objects containing `useTransform` input/output range arrays:
-  - **Straight Up config:**
-    - `translateY`: input `[0, 1]` → output from positive to negative (e.g., `[150, -150]` pixels). Cards displaced downward at scroll start, displaced upward at scroll end.
-    - `rotate`: subtle tilt range (e.g., `[-2, 2]` degrees)
-    - `scale`: subtle pulse (e.g., `[0.95, 1.05]`)
-  - **Diagonal Drift config:**
-    - Same `translateY` range as straight-up
-    - `translateX`: alternating direction based on card index. Even cards `[-40, 40]`, odd cards `[40, -40]`
-    - `rotate`: wider range (e.g., `[-6, 6]` degrees)
-    - `scale`: same as straight-up
-- Per-card intensity multiplier: higher-index cards get slightly more displacement (e.g., `1 + index * 0.15`), creating layered depth where lower cards move faster
-- `opacity` range: `[0, 1, 1, 0]` mapped to scroll input `[0, 0.15, 0.85, 1]` — cards fade in as they enter the parallax zone, stay visible through the middle, fade out as they leave. This enhances the "falling past" sensation.
+**Specific changes:**
 
-### 2. Keep `AnimationModeContext` as-is
-**File:** `src/context/AnimationModeContext.tsx` (no changes)
+Add `getCardScrollWindow(index, totalCards)`:
+- Calculates a sub-range of `[0, 1]` for each card based on its index
+- `windowSize` = 0.35 (each card visible for 35% of total scroll progress)
+- `stagger` = `(1 - windowSize) / (totalCards - 1)` — evenly distributes card start points
+- Returns `{ start, end }` where `start = index * stagger`, `end = start + windowSize`
+- For 4 cards: Card 0 → `[0.0, 0.35]`, Card 1 → `[0.217, 0.567]`, Card 2 → `[0.433, 0.783]`, Card 3 → `[0.65, 1.0]`
 
-Already correctly implements:
-- Provider wrapping the app
-- Current `AnimationMode` state
-- `toggleMode()` and `setMode()` functions
-- Default: `'straight-up'`
+Add `getCardOpacityRange(index, totalCards)`:
+- Returns `{ input: number[], output: number[] }` for per-card fade in/out
+- Uses the card's scroll window with fade margins at edges
+- `fadeMargin` = 15% of window size
+- Input: `[start, start + fadeMargin, end - fadeMargin, end]`
+- Output: `[0, 1, 1, 0]`
 
-### 3. Create `useScrollProgress` hook
-**File:** `src/hooks/useScrollProgress.ts`
+Update translateY output ranges:
+- **Current:** `[150, -150]` — too small, cards barely move
+- **New:** `[600, -600]` — cards travel full viewport height through the sticky container
+- These values are applied within each card's scroll window, not the full `[0, 1]` range
 
-Custom hook using Framer Motion's `useScroll` with a **target ref** (not a container ref):
+Remove or reduce intensity multiplier:
+- **Current:** `1 + index * 0.15` — was needed when all cards moved simultaneously to create depth
+- **New:** Remove. Depth now comes from staggered scroll windows (cards enter at different times). Keeping the multiplier would make later cards overshoot the viewport, breaking the effect.
 
-```ts
-useScroll({ target: sectionRef, offset: ["start end", "end start"] })
-```
+Remove shared opacity constants:
+- **Current:** `OPACITY_INPUT` and `OPACITY_OUTPUT` shared across all cards
+- **New:** Remove these. Per-card opacity is calculated by `getCardOpacityRange` instead.
 
-- **`target` ref** tracks the projects section element's position relative to the viewport as the page scrolls. This is different from `container` ref which tracks scroll within a scrollable element.
-- Returns `scrollYProgress` as a `MotionValue<number>` (0 → 1):
-  - `0` = section's top edge has reached the viewport's bottom edge (just entering view)
-  - `1` = section's bottom edge has reached the viewport's top edge (just leaving view)
-- The hook accepts a `ref` to the section element and returns `{ scrollYProgress }`
-- This single progress value feeds all per-card `useTransform` calls
-
-### 4. Build `ParallaxCard` wrapper component
-**File:** `src/features/projects/ParallaxCard.tsx`
-
-Wraps `ProjectCard` with scroll-linked transforms using `motion.div` and `useTransform`:
-- Receives `scrollYProgress` (MotionValue), `index`, `project`, and `prefersReducedMotion` as props
-- Reads current mode from `AnimationModeContext`
-- Uses `useTransform` to map `scrollYProgress` to individual transform properties:
-  - `translateY` — primary parallax movement, multiplied by per-card intensity factor (`1 + index * 0.15`)
-  - `rotate` — subtle or dramatic based on mode
-  - `scale` — slight size variation through scroll
-  - `opacity` — fade in/out at edges of scroll range
-  - `translateX` — zero in straight-up mode; alternating left/right in diagonal-drift mode
-- Applies transforms via `motion.div`'s `style` prop (not `animate`/`variants`, since these are continuous MotionValues)
-- **Reduced motion:** if `prefersReducedMotion` is true, renders plain `<div>` with no transforms
-
-### 5. Update `ProjectsSection` layout for parallax
-**File:** `src/features/projects/ProjectsSection.tsx`
-
-- Replace `AnimatedCard` import with `ParallaxCard`
-- Attach a `ref` to the section element and pass it to `useScrollProgress`
-- Pass `scrollYProgress` down to each `ParallaxCard`
-- Pass `index` to each card for alternating direction and intensity multiplier
-- **Section height:** Add generous vertical padding (`py-40` or similar) to give cards enough scroll runway for the parallax to feel substantial. With 4 cards in 2 rows, natural height is ~600-800px — padding extends the scroll range so transforms have room to play out.
-- **Overflow:** Set `overflow: visible` on the grid container so displaced cards aren't clipped. The section itself should use `overflow: hidden` to prevent parallaxed cards from bleeding into the Hero above or content below. Adjacent sections (Hero) already have their own backgrounds and `z-index` layering.
-
-### 6. Keep animation mode toggle as-is
-**File:** `src/components/AnimationToggle.tsx` (no changes)
-
-Already correctly implements:
-- Floating button (top-left, `z-40`)
-- Shows current mode label
-- Click or `A` key to cycle modes
-- Accessible button with aria-label
-
-### 7. Keep `App.tsx` wiring as-is
-**File:** `src/App.tsx` (no changes)
-
-Already correctly wired:
-- `AnimationModeProvider` wrapping all content
-- `AnimationToggle` rendered
-- Keyboard listener lives in `AnimationToggle` component (not App)
-
-### 8. Add `prefers-reduced-motion` support
-- Check `window.matchMedia('(prefers-reduced-motion: reduce)')` in `ProjectsSection` (same pattern as current implementation)
-- Pass boolean down to `ParallaxCard`
-- If active: `ParallaxCard` renders a plain `<div>` — no transforms, no motion
-- Grid layout still works normally without transforms
+**Verify:** Functions return correct ranges for 4 cards. TypeScript compiles.
+**Done when:** `getCardScrollWindow(0, 4)` returns `{ start: 0, end: 0.35 }`, `getCardScrollWindow(3, 4)` returns `{ start: 0.65, end: 1.0 }`. TranslateY output is `[600, -600]`. No shared opacity constants.
 
 ---
 
-## Files Created/Modified
+### Task 2: Restructure ProjectsSection layout — sticky viewport pattern
+
+**File:** `src/features/projects/ProjectsSection.tsx`
+**Action:** Replace CSS grid with tall section + sticky viewport container.
+
+**Specific changes:**
+
+Remove the grid:
+- Delete `<div className="grid grid-cols-1 md:grid-cols-2 gap-8 overflow-visible">`
+
+Replace the section structure:
+```
+<section ref={ref} aria-label="Projects" className="relative bg-deep" style={{ height: '300vh' }}>
+  <div className="sticky top-0 h-screen overflow-hidden flex items-center justify-center">
+    <h2 className="absolute top-8 z-10 ...">Projects</h2>
+    {projects.map(...)}
+  </div>
+</section>
+```
+
+Key layout details:
+- **Section:** `relative`, `height: 300vh` (provides ~400vh total scroll distance with viewport), `bg-deep` background
+- **Sticky container:** `sticky top-0`, `h-screen` (100vh), `overflow-hidden` (clips cards entering/exiting), `flex items-center justify-center` (centers content area)
+- **Heading:** `absolute top-8` within the sticky container, stays visible throughout the scroll, `z-10` to stay above cards
+- **No grid**, no `max-w-6xl` wrapper — cards are positioned absolutely within the sticky container
+
+Pass `totalCards={projects.length}` to each `ParallaxCard`.
+
+Remove the `px-4 pr-20 pb-36 md:pr-4 md:pb-20` padding that was for the grid layout.
+
+**Verify:** Section renders as a tall scroll area. Sticky container stays pinned during scroll. No grid visible.
+**Done when:** Browser shows a 300vh section where the inner content stays pinned while scrolling. Cards are no longer in a grid.
+
+---
+
+### Task 3: Update ParallaxCard — per-card scroll windows and absolute positioning
+
+**File:** `src/features/projects/ParallaxCard.tsx`
+**Action:** Each card calculates its own scroll window, positions absolutely within the sticky container, and alternates horizontal placement.
+
+**Specific changes:**
+
+Add `totalCards` prop to `ParallaxCardProps` interface.
+
+Replace shared scroll ranges with per-card ranges:
+- Call `getCardScrollWindow(index, totalCards)` to get `{ start, end }`
+- Call `getCardOpacityRange(index, totalCards)` to get per-card opacity input/output
+- `translateY`: `useTransform(scrollYProgress, [start, end], [600, -600])` — using the card's own window
+- `opacity`: `useTransform(scrollYProgress, cardOpacity.input, cardOpacity.output)` — per-card fade
+- `rotate`: `useTransform(scrollYProgress, [start, end], config.rotateOutput)` — scoped to card's window
+- `scale`: `useTransform(scrollYProgress, [start, end], config.scaleOutput)` — scoped to card's window
+- `translateX`: `useTransform(scrollYProgress, [start, end], ...)` — scoped to card's window, with direction alternation for diagonal-drift mode
+
+Remove the intensity multiplier:
+- Delete `const intensity = getIntensityMultiplier(index)`
+- Delete the `.map((v) => v * intensity)` on translateY output
+
+Add absolute positioning and horizontal alternation:
+- Each `motion.div` gets `className="absolute w-full max-w-sm md:max-w-md"`
+- Even-indexed cards: positioned left — add style or class for `left: 10%` (desktop) or `left: 50%; transform: translateX(-50%)` (mobile)
+- Odd-indexed cards: positioned right — add style or class for `right: 10%` (desktop) or same center (mobile)
+- Responsive: On mobile (< md), all cards center horizontally. On desktop, they alternate left/right.
+
+Reduced motion fallback:
+- **Current:** Renders a plain `<div>` — but this relied on the grid for layout
+- **New:** Render a plain `<div>` with `className="mb-8"` in a simple vertical stack. The parent component should also fall back to a simple stacked layout (see Task 4).
+
+**Verify:** Each card appears at a different scroll point. Cards alternate left/right. Scrolling back reverses the effect.
+**Done when:** Card 0 enters first as you scroll, card 3 enters last. Even cards on left, odd cards on right. Each card fades in, floats up through viewport, fades out.
+
+---
+
+### Task 4: Add reduced-motion fallback layout to ProjectsSection
+
+**File:** `src/features/projects/ProjectsSection.tsx`
+**Action:** When `prefersReducedMotion` is true, render a standard stacked layout instead of the sticky viewport pattern.
+
+**Specific changes:**
+
+Add conditional rendering:
+- If `prefersReducedMotion` is true: render a simple `<section>` with standard padding, heading, and a vertical stack of `ProjectCard` components (no `ParallaxCard`, no sticky container, no 300vh height)
+- If false: render the sticky viewport pattern from Task 2
+
+Why this is needed:
+- The sticky viewport + absolute positioning only makes sense with parallax transforms
+- Without transforms, absolutely positioned cards would stack on top of each other
+- The reduced-motion path should show a clean, static card list
+
+**Verify:** Enable `prefers-reduced-motion: reduce` in browser devtools. Cards display in a simple vertical list.
+**Done when:** Reduced motion shows a readable, static card layout. No sticky container, no 300vh height, no overlapping.
+
+---
+
+### Task 5: Update animation mode configs for new scroll window pattern
+
+**File:** `src/data/animationConfig.ts`
+**Action:** Adjust the per-mode config values to work with per-card scroll windows instead of the full `[0, 1]` range.
+
+**Specific changes:**
+
+The `translateYInput`/`translateYOutput` arrays in `STRAIGHT_UP_CONFIG` and `DIAGONAL_DRIFT_CONFIG` are no longer used directly — `ParallaxCard` now builds its own input range from `getCardScrollWindow`. However, the configs still define the **output values** for each transform property:
+
+Restructure config objects to contain only output values:
+```ts
+STRAIGHT_UP_CONFIG = {
+  translateYOutput: [600, -600],    // was [150, -150]
+  rotateOutput: [-2, 2],            // unchanged
+  scaleOutput: [0.95, 1.05],        // unchanged
+  translateXOutput: [0, 0],          // unchanged (no horizontal movement)
+}
+
+DIAGONAL_DRIFT_CONFIG = {
+  translateYOutput: [600, -600],    // was [150, -150]
+  rotateOutput: [-6, 6],            // unchanged
+  scaleOutput: [0.95, 1.05],        // unchanged
+  translateXOutput: [-60, 60],       // was [-40, 40], slightly wider for new layout
+}
+```
+
+Remove the `*Input` arrays from configs (they were all `[0, 1]`). The input range is now always `[start, end]` from `getCardScrollWindow`.
+
+**Verify:** Config objects export clean output-only values. TypeScript compiles.
+**Done when:** Configs contain only `*Output` arrays. `ParallaxCard` pairs them with per-card scroll windows as input ranges.
+
+---
+
+### Task 6: Verify no changes needed in supporting files
+
+**Files:** `src/context/AnimationModeContext.tsx`, `src/components/AnimationToggle.tsx`, `src/App.tsx`, `src/hooks/useScrollProgress.ts`, `src/hooks/index.ts`, `src/components/index.ts`
+
+**Action:** Confirm these files need no changes.
+
+- `AnimationModeContext` — still provides mode and toggle, no changes
+- `AnimationToggle` — still toggles mode, no changes
+- `App.tsx` — still wraps with provider, renders ProjectsSection, no changes
+- `useScrollProgress` — still tracks section scroll progress with target ref, no changes (the sticky viewport pattern doesn't change how scroll progress is tracked — the ref goes on the tall `<section>`, not the sticky container)
+- `hooks/index.ts` — still exports useScrollProgress, no changes
+- `components/index.ts` — still exports AnimationToggle, no changes
+
+**Verify:** All imports resolve. No unused exports.
+**Done when:** Confirmed no changes needed. Noted in this plan for completeness.
+
+---
+
+## Tuning Parameters
+
+These values should be refined during implementation based on visual feel:
+
+| Parameter | Initial Value | What It Controls | Adjust If... |
+|-----------|--------------|------------------|--------------|
+| Section height | `300vh` | Total scroll runway | Cards feel too slow (reduce) or too fast (increase) |
+| Window size | `0.35` | How long each card is visible during scroll | Cards feel rushed (increase) or linger too long (decrease) |
+| TranslateY range | `[600, -600]` | Vertical travel distance | Cards don't reach viewport edges (increase) or overshoot (decrease) |
+| Horizontal offset | `10%` from edge | Left/right card placement | Cards feel too spread (increase %) or too tight (decrease %) |
+| Card max-width | `max-w-sm md:max-w-md` | Card size within viewport | Cards feel too small or too large |
+| Fade margin | 15% of window | Speed of fade in/out | Fade too abrupt (increase) or too slow (decrease) |
+
+---
+
+## Files Modified Summary
 
 | Action | File | Scope |
 |--------|------|-------|
-| **Rewrite** | `src/data/animationConfig.ts` | Full rewrite — replace Variants with useTransform ranges |
+| **Modified** | `src/data/animationConfig.ts` | Add `getCardScrollWindow`, `getCardOpacityRange`, remove shared opacity constants, remove intensity multiplier, restructure configs to output-only, increase translateY range |
+| **Modified** | `src/features/projects/ProjectsSection.tsx` | Replace grid with sticky viewport pattern, add reduced-motion fallback, pass `totalCards` prop |
+| **Modified** | `src/features/projects/ParallaxCard.tsx` | Per-card scroll windows, absolute positioning, horizontal alternation, `totalCards` prop, updated reduced-motion path |
 | **No change** | `src/context/AnimationModeContext.tsx` | Already correct |
-| **New** | `src/hooks/useScrollProgress.ts` | New hook |
-| **New** | `src/features/projects/ParallaxCard.tsx` | New component |
 | **No change** | `src/components/AnimationToggle.tsx` | Already correct |
-| **Modified** | `src/features/projects/ProjectsSection.tsx` | Swap AnimatedCard → ParallaxCard, add ref, adjust layout |
 | **No change** | `src/App.tsx` | Already correct |
-| **Modified** | `src/hooks/index.ts` | Export useScrollProgress instead of useScrollAnimation |
+| **No change** | `src/hooks/useScrollProgress.ts` | Already correct |
+| **No change** | `src/hooks/index.ts` | Already correct |
 | **No change** | `src/components/index.ts` | Already correct |
-| **Delete** | `src/hooks/useScrollAnimation.ts` | IntersectionObserver approach, no longer needed |
-| **Delete** | `src/features/projects/AnimatedCard.tsx` | Replaced by ParallaxCard |
+
+---
+
+## Dependencies
+
+- Phase 1 layout (Hero, ProjectCard, FABs) — complete
+- Framer Motion `useScroll` + `useTransform` — already installed
+- `AnimationModeContext` — already built in current phase 2
 
 ---
 
 ## Verification
 
 1. `npm run dev` — no errors
-2. Scroll down to projects section — cards move continuously as you scroll (parallax effect, not a one-time entrance)
-3. Cards fade in as they enter the scroll zone, stay visible through the middle, fade out as they leave
-4. Cards lower in the grid move slightly faster than upper cards (depth layering)
-5. Press `A` or click toggle — animation mode switches live
-6. **Straight Up mode:** cards move vertically only, subtle rotation, no lateral drift
-7. **Diagonal Drift mode:** cards move vertically + alternating left/right drift, more rotation
-8. Scrolling back up reverses the effect (scroll-linked, not one-shot)
+2. Scroll down past Hero — sticky viewport appears, stays pinned while scrolling
+3. First card (Card 0) floats up from below the viewport as you begin scrolling into the section
+4. As you continue scrolling, Card 0 rises through center and exits above, while Card 1 enters from below
+5. Cards alternate left/right positioning (even = left, odd = right on desktop)
+6. Each card fades in as it enters, stays opaque through center, fades out as it exits
+7. Scrolling back up reverses everything (scroll-linked, not one-shot)
+8. Press `A` or click toggle — **Straight Up**: vertical only. **Diagonal Drift**: vertical + horizontal drift + more rotation
 9. `npx tsc --noEmit` — no type errors
-10. Enable "prefers-reduced-motion" in browser devtools — parallax is disabled, cards show in static grid
-11. Cards don't bleed into Hero section above (section overflow clipping)
+10. Enable `prefers-reduced-motion` in devtools → static vertical card list, no parallax, no sticky container
+11. Cards don't bleed outside the sticky viewport (overflow hidden clips them)
+12. Mobile responsive: cards center horizontally on small screens
 
 **STOP after Phase 2 — wait for user approval before proceeding to Phase 3.**

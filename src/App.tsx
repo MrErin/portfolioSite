@@ -1,11 +1,12 @@
 import { FaUser, FaEnvelope } from 'react-icons/fa';
 import { Hero } from './features/hero';
 import { ProjectsSection } from './features/projects';
-import { Fab } from './components';
+import { Fab, AnimationToggle } from './components';
+import { AnimationModeProvider } from './context/AnimationModeContext';
 
 const App = () => {
   return (
-    <>
+    <AnimationModeProvider>
       <a href="#main-content" className="skip-link">
         Skip to main content
       </a>
@@ -13,6 +14,9 @@ const App = () => {
         <Hero />
         <ProjectsSection />
       </main>
+
+      {/* Animation mode toggle */}
+      <AnimationToggle />
 
       {/* FAB navigation */}
       <div
@@ -23,7 +27,7 @@ const App = () => {
         <Fab icon={<FaUser />} label="Open about panel" />
         <Fab icon={<FaEnvelope />} label="Open contact panel" />
       </div>
-    </>
+    </AnimationModeProvider>
   );
 };
 

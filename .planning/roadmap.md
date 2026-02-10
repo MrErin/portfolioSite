@@ -17,13 +17,16 @@
 - [x] About panel component
 - [x] Contact panel component
 
-## Phase 2: Animation System
-- [ ] Scroll-linked parallax (Framer Motion useScroll + useTransform)
-- [ ] Animation Mode 1: Straight Up (vertical movement tied to scroll)
-- [ ] Animation Mode 2: Diagonal Drift (vertical + alternating lateral movement tied to scroll)
-- [ ] Toggle mechanism to switch between animation modes
-- [ ] Cards float past continuously as user scrolls (parallax effect)
-- [ ] prefers-reduced-motion support
+## Phase 2: Animation System — Sticky Viewport Pattern
+- [x] Scroll-linked parallax (Framer Motion useScroll + useTransform)
+- [x] Animation Mode context + toggle mechanism
+- [x] Sticky viewport layout (300vh section + pinned 100vh container)
+- [x] Per-card scroll windows (staggered entry/exit)
+- [x] Absolute card positioning with left/right alternation
+- [x] Cards float up individually from below viewport as user scrolls
+- [x] Animation Mode 1: Straight Up (vertical movement only)
+- [x] Animation Mode 2: Diagonal Drift (vertical + horizontal drift + more rotation)
+- [x] prefers-reduced-motion fallback (static vertical card list)
 
 ## Phase 3: Interactivity
 - [ ] Card click → modal open (grow-from-card transition)

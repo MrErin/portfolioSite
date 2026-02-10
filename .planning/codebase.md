@@ -19,20 +19,24 @@ Feature-based structure with barrel exports.
 
 ```
 src/
-├── App.tsx                    # Root: skip-link, <main>, FABs
+├── App.tsx                    # Root: skip-link, <main>, AnimationToggle, FABs
 ├── main.tsx                   # Entry point
 ├── index.css                  # Tailwind v4 @theme + global styles
 ├── components/
+│   ├── AnimationToggle.tsx    # Dev toggle for animation modes (A key + button)
 │   ├── Fab.tsx                # Floating action button (generic)
 │   └── index.ts
+├── context/
+│   └── AnimationModeContext.tsx # Context for current animation mode state
 ├── features/
 │   ├── hero/
 │   │   ├── Hero.tsx           # Full-viewport hero with gradient bg
 │   │   └── index.ts
 │   ├── projects/
 │   │   ├── ProjectCard.tsx    # Card with gradient placeholder + tech badges
+│   │   ├── ParallaxCard.tsx   # Wrapper with scroll-linked parallax transforms
 │   │   ├── ProjectModal.tsx   # Dialog with close btn, links, demo placeholder
-│   │   ├── ProjectsSection.tsx# 2-col grid, maps project data
+│   │   ├── ProjectsSection.tsx# Sticky viewport pattern (300vh + pinned 100vh)
 │   │   └── index.ts
 │   ├── about/
 │   │   ├── AboutPanel.tsx     # Bio, skills badges, photo placeholder
@@ -41,11 +45,13 @@ src/
 │       ├── ContactPanel.tsx   # Email/GitHub/LinkedIn links
 │       └── index.ts
 ├── hooks/
-│   └── index.ts               # Empty — ready for custom hooks
+│   ├── useScrollProgress.ts   # Framer Motion useScroll wrapper
+│   └── index.ts
 ├── types/
 │   ├── project.ts             # Project interface
 │   └── index.ts
 └── data/
+    ├── animationConfig.ts     # Parallax configs, scroll window calculators
     └── projects.ts            # 4 mock projects (themed names)
 ```
 
@@ -67,8 +73,11 @@ CSS-first config via `@theme` block in `src/index.css`. Key tokens:
 - ARIA labels on all interactive elements and landmarks
 - Skip-link for keyboard navigation
 - Barrel exports from feature directories (`index.ts`)
-- No state management yet — all components are presentational
-- FABs rendered in `App.tsx`, not wired to any handlers
+- Animation mode state managed via React Context (`AnimationModeContext`)
+- Scroll-linked animations via Framer Motion's `useScroll` + `useTransform`
+- Sticky viewport pattern: tall section (300vh) with pinned inner container (100vh)
+- Per-card scroll windows for staggered entry/exit timing
+- FABs rendered in `App.tsx`, not wired to any handlers yet
 - ProjectModal exists structurally but is not rendered anywhere yet
 
 ## External Integrations
