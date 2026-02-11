@@ -1,4 +1,4 @@
-import { useReducedMotion } from '../hooks/useReducedMotion';
+import { useReducedMotion } from '@/hooks';
 
 interface Particle {
   id: number;
@@ -24,7 +24,6 @@ const PARTICLE_COLORS = [
 const ParticleField = () => {
   const prefersReducedMotion = useReducedMotion();
 
-  // Don't render for users who prefer reduced motion
   if (prefersReducedMotion) {
     return null;
   }
@@ -41,10 +40,7 @@ const ParticleField = () => {
   }));
 
   return (
-    <div
-      className="absolute inset-0 overflow-hidden pointer-events-none"
-      aria-hidden="true"
-    >
+    <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
       {particles.map((particle) => (
         <div
           key={particle.id}
@@ -64,4 +60,3 @@ const ParticleField = () => {
 };
 
 export { ParticleField };
-export default ParticleField;

@@ -36,4 +36,4 @@ const AboutPanel = () => {
   );
 };
 
-export default AboutPanel;
+export { AboutPanel };

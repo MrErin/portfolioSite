@@ -11,7 +11,7 @@ const QUERY = '(prefers-reduced-motion: reduce)';
  *
  * @returns true if the user prefers reduced motion
  */
-export const useReducedMotion = (): boolean => {
+const useReducedMotion = (): boolean => {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => {
     if (typeof window === 'undefined') return false;
     return window.matchMedia(QUERY).matches;
@@ -30,3 +30,5 @@ export const useReducedMotion = (): boolean => {
 
   return prefersReducedMotion;
 };
+
+export { useReducedMotion };

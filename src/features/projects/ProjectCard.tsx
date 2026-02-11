@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import type { Project } from '../../types/project';
+import type { Project } from './types';
 
 interface ProjectCardProps {
   project: Project;
@@ -56,4 +56,4 @@ const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
   );
 };
 
-export default ProjectCard;
+export { ProjectCard };

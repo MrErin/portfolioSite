@@ -50,4 +50,4 @@ const ContactPanel = () => {
   );
 };
 
-export default ContactPanel;
+export { ContactPanel };

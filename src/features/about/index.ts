@@ -1,1 +1,1 @@
-export { default as AboutPanel } from './AboutPanel';
+export * from './AboutPanel';

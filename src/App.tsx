@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { FaEnvelope } from 'react-icons/fa';
-import type { Project } from './types/project';
-import { Hero } from './features/hero';
-import { ProjectsSection, ProjectModal } from './features/projects';
-import { AboutPanel } from './features/about';
-import { ContactPanel } from './features/contact';
-import { Fab, SlidePanel } from './components';
+import type { Project } from '@/features/projects/types';
+import { Hero } from '@/features/hero';
+import { ProjectsSection, ProjectModal } from '@/features/projects';
+import { AboutPanel } from '@/features/about';
+import { ContactPanel } from '@/features/contact';
+import { Fab, SlidePanel } from '@/components';
 
 const App = () => {
   // Overlay state
@@ -42,10 +42,7 @@ const App = () => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         // Ignore if typing in an input/textarea
-        if (
-          e.target instanceof HTMLInputElement ||
-          e.target instanceof HTMLTextAreaElement
-        ) {
+        if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
           return;
         }
 
@@ -72,12 +69,10 @@ const App = () => {
         <ProjectsSection onProjectClick={handleProjectClick} />
       </main>
 
-      {/* FAB navigation */}
       <div className="fixed bottom-6 right-6 z-40">
         <Fab icon={<FaEnvelope />} label="Open about & contact" onClick={handleOpenPanel} />
       </div>
 
-      {/* Project modal */}
       <AnimatePresence>
         {selectedProject && (
           <ProjectModal
@@ -88,7 +83,6 @@ const App = () => {
         )}
       </AnimatePresence>
 
-      {/* Combined About & Contact panel */}
       <AnimatePresence>
         {panelOpen && (
           <SlidePanel onClose={handleClosePanel} ariaLabel="About and Contact">
@@ -102,4 +96,4 @@ const App = () => {
   );
 };
 
-export default App;
+export { App };

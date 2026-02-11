@@ -1,7 +1,7 @@
-import { motion } from 'framer-motion';
 import { FaGithub, FaExternalLinkAlt, FaTimes } from 'react-icons/fa';
-import type { Project } from '../../types/project';
-import { useFocusTrap } from '../../hooks/useFocusTrap';
+import { motion } from 'framer-motion';
+import { useFocusTrap } from '@/hooks';
+import type { Project } from './types';
 
 interface ProjectModalProps {
   project: Project;
@@ -110,4 +110,4 @@ const ProjectModal = ({ project, onClose, cardOrigin }: ProjectModalProps) => {
   );
 };
 
-export default ProjectModal;
+export { ProjectModal };

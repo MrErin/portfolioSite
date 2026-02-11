@@ -1,4 +1,4 @@
-import type { Project } from '../types/project';
+import type { Project } from '@/features/projects/types.ts';
 
 export const projects: Project[] = [
   {
@@ -35,5 +35,5 @@ export const projects: Project[] = [
     techStack: ['React', 'TypeScript', 'D3.js', 'WebSocket'],
     demoUrl: 'https://redqueen.example.com',
     repoUrl: 'https://github.com/user/red-queen-dashboard',
-  }
+  },
 ];

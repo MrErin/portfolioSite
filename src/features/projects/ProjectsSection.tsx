@@ -1,11 +1,10 @@
-import { projects } from '../../data/projects';
-import { SECTION_HEIGHT_VH } from '../../data/animationConfig';
-import { useScrollProgress } from '../../hooks/useScrollProgress';
-import { useReducedMotion } from '../../hooks/useReducedMotion';
-import { ParticleField } from '../../components';
-import type { Project } from '../../types/project';
-import ParallaxCard from './ParallaxCard';
-import ProjectCard from './ProjectCard';
+import { ParticleField } from '@/components';
+import { SECTION_HEIGHT_VH } from '@/data/animationConfig';
+import { projects } from '@/data/projects';
+import { useScrollProgress, useReducedMotion } from '@/hooks';
+import { ParallaxCard } from './ParallaxCard';
+import { ProjectCard } from './ProjectCard';
+import type { Project } from './types';
 
 interface ProjectsSectionProps {
   onProjectClick?: (project: Project, rect: DOMRect) => void;
@@ -30,14 +29,9 @@ const ProjectsSection = ({ onProjectClick }: ProjectsSectionProps) => {
   // Reduced motion fallback: simple vertical stack
   if (prefersReducedMotion) {
     return (
-      <section
-        aria-label="Projects"
-        className="min-h-screen bg-deep py-20 px-4"
-      >
+      <section aria-label="Projects" className="min-h-screen bg-deep py-20 px-4">
         <div className="max-w-4xl mx-auto">
-          <h2 className="font-heading text-purple-light text-4xl mb-12 text-center">
-            Projects
-          </h2>
+          <h2 className="font-heading text-purple-light text-4xl mb-12 text-center">Projects</h2>
           <div className="flex flex-col gap-6">
             {projects.map((project) => (
               <ProjectCard key={project.id} project={project} onClick={onProjectClick} />
@@ -83,4 +77,4 @@ const ProjectsSection = ({ onProjectClick }: ProjectsSectionProps) => {
   );
 };
 
-export default ProjectsSection;
+export { ProjectsSection };

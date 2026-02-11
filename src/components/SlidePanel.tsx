@@ -1,7 +1,7 @@
-import { motion } from 'framer-motion';
 import type { ReactNode } from 'react';
 import { FaTimes } from 'react-icons/fa';
-import { useFocusTrap } from '../hooks/useFocusTrap';
+import { motion } from 'framer-motion';
+import { useFocusTrap } from '@/hooks';
 
 interface SlidePanelProps {
   children: ReactNode;
@@ -58,12 +58,10 @@ const SlidePanel = ({ children, onClose, ariaLabel }: SlidePanelProps) => {
         </button>
 
         {/* Panel content */}
-        <div className="p-6">
-          {children}
-        </div>
+        <div className="p-6">{children}</div>
       </motion.div>
     </>
   );
 };
 
-export default SlidePanel;
+export { SlidePanel };

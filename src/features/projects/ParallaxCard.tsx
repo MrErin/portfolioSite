@@ -1,11 +1,7 @@
 import { motion, useTransform, type MotionValue } from 'framer-motion';
-import type { Project } from '../../types/project';
-import {
-  PARALLAX_CONFIG,
-  getCardScrollWindow,
-  getCardOpacityRange,
-} from '../../data/animationConfig';
-import ProjectCard from './ProjectCard';
+import { PARALLAX_CONFIG, getCardScrollWindow, getCardOpacityRange } from '@/data/animationConfig';
+import { ProjectCard } from './ProjectCard';
+import type { Project } from './types';
 
 interface ParallaxCardProps {
   /** Scroll progress MotionValue from useScrollProgress hook */
@@ -67,15 +63,12 @@ const ParallaxCard = ({
   );
 
   // Horizontal movement - odd cards get opposite direction for alternating drift
-  const translateXOutput = index % 2 === 1
-    ? PARALLAX_CONFIG.translateXOutput.map((v) => -v)
-    : PARALLAX_CONFIG.translateXOutput;
+  const translateXOutput =
+    index % 2 === 1
+      ? PARALLAX_CONFIG.translateXOutput.map((v) => -v)
+      : PARALLAX_CONFIG.translateXOutput;
 
-  const translateX = useTransform(
-    scrollYProgress,
-    [scrollStart, scrollEnd],
-    translateXOutput
-  );
+  const translateX = useTransform(scrollYProgress, [scrollStart, scrollEnd], translateXOutput);
 
   // Horizontal positioning: even cards on left, odd cards on right (desktop only)
   // Positioned closer to center on larger screens
@@ -100,4 +93,4 @@ const ParallaxCard = ({
   );
 };
 
-export default ParallaxCard;
+export { ParallaxCard };

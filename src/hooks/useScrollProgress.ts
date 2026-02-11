@@ -1,5 +1,5 @@
-import { useScroll } from 'framer-motion';
 import { useRef, type RefObject } from 'react';
+import { useScroll } from 'framer-motion';
 
 interface UseScrollProgressOptions {
   /** Optional ref to track. If not provided, hook creates its own ref. */
@@ -22,7 +22,7 @@ interface UseScrollProgressOptions {
  * Card scroll windows in animationConfig.ts are calculated to animate
  * only within that pinned portion.
  */
-export const useScrollProgress = (options: UseScrollProgressOptions = {}) => {
+const useScrollProgress = (options: UseScrollProgressOptions = {}) => {
   const { targetRef } = options;
   const internalRef = useRef<HTMLElement>(null);
 
@@ -36,3 +36,5 @@ export const useScrollProgress = (options: UseScrollProgressOptions = {}) => {
 
   return { scrollYProgress, ref };
 };
+
+export { useScrollProgress };

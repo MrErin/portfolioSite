@@ -1,3 +1,3 @@
-export { default as ProjectCard } from './ProjectCard';
-export { default as ProjectModal } from './ProjectModal';
-export { default as ProjectsSection } from './ProjectsSection';
+export * from './ProjectCard';
+export * from './ProjectModal';
+export * from './ProjectsSection';

@@ -41,7 +41,7 @@ const INNER_PAD_RATIO = 0.05;
  */
 export const getCardScrollWindow = (
   index: number,
-  totalCards: number,
+  totalCards: number
 ): { start: number; end: number } => {
   const stickyRange = STICKY_END - STICKY_START;
   const innerPad = stickyRange * INNER_PAD_RATIO;
@@ -73,7 +73,7 @@ export const getCardScrollWindow = (
  */
 export const getCardOpacityRange = (
   index: number,
-  totalCards: number,
+  totalCards: number
 ): { input: number[]; output: number[] } => {
   const { start, end } = getCardScrollWindow(index, totalCards);
   const windowLength = end - start;

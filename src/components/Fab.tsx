@@ -19,4 +19,4 @@ const Fab = ({ icon, label, onClick }: FabProps) => {
   );
 };
 
-export default Fab;
+export { Fab };

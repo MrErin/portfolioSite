@@ -14,7 +14,7 @@ interface UseFocusTrapOptions {
  *
  * @param options - Configuration options
  */
-export const useFocusTrap = ({ isActive }: UseFocusTrapOptions) => {
+const useFocusTrap = ({ isActive }: UseFocusTrapOptions) => {
   const containerRef = useRef<HTMLElement>(null);
   const previousActiveElementRef = useRef<Element | null>(null);
 
@@ -79,3 +79,5 @@ export const useFocusTrap = ({ isActive }: UseFocusTrapOptions) => {
 
   return containerRef;
 };
+
+export { useFocusTrap };
