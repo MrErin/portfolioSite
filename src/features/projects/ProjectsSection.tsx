@@ -1,7 +1,8 @@
+import { useRef } from 'react';
+import { useReducedMotion, useScroll } from 'framer-motion';
 import { ParticleField } from '@/components';
-import { SECTION_HEIGHT_VH } from '@/data/animationConfig';
 import { projects } from '@/data/projects';
-import { useScrollProgress, useReducedMotion } from '@/hooks';
+import { SECTION_HEIGHT_VH } from './animationConfig';
 import { ParallaxCard } from './ParallaxCard';
 import { ProjectCard } from './ProjectCard';
 import type { Project } from './types';
@@ -23,7 +24,11 @@ interface ProjectsSectionProps {
  */
 const ProjectsSection = ({ onProjectClick }: ProjectsSectionProps) => {
   const prefersReducedMotion = useReducedMotion();
-  const { scrollYProgress, ref } = useScrollProgress();
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start end', 'end start'],
+  });
   const totalCards = projects.length;
 
   // Reduced motion fallback: simple vertical stack

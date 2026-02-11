@@ -48,7 +48,7 @@ Polish and refinement: removed dev-only animation toggle system, hardcoded to Di
 - Phase 4: Polish — **awaiting user approval**
 
 ## Blockers
-- **Card 0 pile bug:** Cards are visible at the bottom of the viewport before their scroll windows begin. Multiple approaches attempted (scroll padding, offset change, sticky-range restriction, reduced overlap). Root cause likely involves Framer Motion `useTransform` initial render behavior. Detailed analysis in `.planning/REVIEW_GUIDE.md` Known Issues section.
+None — Card 0 pile bug resolved (see session log 2026-02-10 post-review refactor).
 
 ## Session Log
 | Date | Action |
@@ -68,3 +68,4 @@ Polish and refinement: removed dev-only animation toggle system, hardcoded to Di
 | 2026-02-10 | Intensified particles: 40→60 count, 2-6px→2-8px size, 40-50%→50-60% opacity. Darkened purple palette: purple-dark #3d2b5a→#150d24, purple #6b4c8a→#3d2b5a (kept purple-light/glow for text readability). |
 | 2026-02-10 | Attempted Card 0 scroll timing fixes: (1) Changed offset to ['start start', 'end end'] — broke animations. (2) Reverted offset, rewrote animationConfig to calculate sticky-pinned range and restrict cards within it. Increased section to 400vh, reduced WINDOW_RATIO to 0.3. Card pile issue persists — tabled for user to investigate. |
 | 2026-02-10 | Generated post-build REVIEW_GUIDE.md with extensive scroll system documentation, known issues analysis, and tuning guide. |
+| 2026-02-10 | Post-review refactor addressing user_suggestions.md: (1) Replaced custom useFocusTrap with focus-trap-react library. (2) Replaced custom useReducedMotion with Framer Motion's built-in hook. (3) Inlined useScrollProgress into ProjectsSection. (4) Removed src/hooks/ and empty src/context/ directories. (5) Moved animationConfig.ts from data/ to features/projects/. (6) Fixed Card 0 pile bug with initial={{ opacity: 0 }}. (7) Fixed ParticleField lint errors (Math.random during render → useMemo). All type checks, lint, and build pass clean. |

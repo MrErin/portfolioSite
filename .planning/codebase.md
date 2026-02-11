@@ -24,7 +24,7 @@ src/
 ├── index.css                  # Tailwind v4 @theme + global styles + @keyframes float
 ├── components/
 │   ├── Fab.tsx                # Floating action button (email icon, opens combined panel)
-│   ├── SlidePanel.tsx         # Reusable slide-in overlay with focus trap (backdrop + animation + close)
+│   ├── SlidePanel.tsx         # Reusable slide-in overlay with focus-trap-react (backdrop + animation + close)
 │   ├── ParticleField.tsx      # Decorative floating dots (respects prefers-reduced-motion)
 │   └── index.ts
 ├── features/
@@ -32,10 +32,11 @@ src/
 │   │   ├── Hero.tsx           # Full-viewport hero with gradient bg + ParticleField
 │   │   └── index.ts
 │   ├── projects/
+│   │   ├── animationConfig.ts # PARALLAX_CONFIG, SECTION_HEIGHT_VH, scroll window calculators (moved from data/)
 │   │   ├── ProjectCard.tsx    # Card with gradient placeholder + tech badges, purple glow on hover, clickable with rect capture
 │   │   ├── ParallaxCard.tsx   # Wrapper with scroll-linked parallax transforms (PARALLAX_CONFIG), forwards onProjectClick
-│   │   ├── ProjectModal.tsx   # Dialog with grow-from-card animation, focus trap, close btn, links, demo placeholder
-│   │   ├── ProjectsSection.tsx# Sticky viewport pattern (SECTION_HEIGHT_VH + pinned 100vh), forwards onProjectClick
+│   │   ├── ProjectModal.tsx   # Dialog with grow-from-card animation, focus-trap-react, close btn, links, demo placeholder
+│   │   ├── ProjectsSection.tsx# Sticky viewport pattern (SECTION_HEIGHT_VH + pinned 100vh), inline useScroll, forwards onProjectClick
 │   │   └── index.ts
 │   ├── about/
 │   │   ├── AboutPanel.tsx     # Bio, skills badges, photo placeholder (section for combined panel)
@@ -43,16 +44,14 @@ src/
 │   └── contact/
 │       ├── ContactPanel.tsx   # Email/GitHub/LinkedIn links (section for combined panel)
 │       └── index.ts
-├── hooks/
-│   ├── useReducedMotion.ts    # Reactive prefers-reduced-motion listener
-│   ├── useScrollProgress.ts   # Framer Motion useScroll wrapper
-│   ├── useFocusTrap.ts        # Focus trap for overlays (save/restore focus, Tab cycle)
-│   └── index.ts
+├── [hooks/ removed — replaced by library equivalents]
+│   # useReducedMotion → framer-motion built-in
+│   # useScrollProgress → inlined in ProjectsSection
+│   # useFocusTrap → focus-trap-react component
 ├── types/
 │   ├── project.ts             # Project interface
 │   └── index.ts
 └── data/
-    ├── animationConfig.ts     # PARALLAX_CONFIG, SECTION_HEIGHT_VH, sticky-range-aware scroll window calculators
     └── projects.ts            # 4 mock projects (themed names)
 ```
 
@@ -79,7 +78,7 @@ CSS-first config via `@theme` block in `src/index.css`. Key tokens:
 - Sticky viewport pattern: tall section (SECTION_HEIGHT_VH, currently 400vh) with pinned inner container (100vh)
 - Per-card scroll windows restricted to the sticky-pinned range (progress ~0.20→0.80), with WINDOW_RATIO and INNER_PAD_RATIO controls
 - Overlay state managed in App.tsx (selectedProject, cardOrigin, panelOpen boolean)
-- **Focus trapping:** useFocusTrap hook on ProjectModal and SlidePanel
+- **Focus trapping:** focus-trap-react component wrapping ProjectModal and SlidePanel (escapeDeactivates: false, allowOutsideClick: true)
 - Grow-from-card modal animation: captures card center on click, animates from that position
 - Slide-in panel: SlidePanel component with backdrop, slide animation, focus trap, and click-outside
 - Escape key listener in App.tsx: prioritizes modal close, then panel

@@ -23,9 +23,9 @@
    **Expected:** Terminal shows `Local: http://localhost:5173/` (or similar port)
 
 3. Open in browser
-   - [ ] Dark page loads with "Portfolio" heading in gold serif font
-   - [ ] Floating dots (particles) drift upward in the background
-   - [ ] Scrolling reveals project cards with parallax animation
+   - [x] Dark page loads with "Portfolio" heading in gold serif font
+   - [x] Floating dots (particles) drift upward in the background
+   - [x] Scrolling reveals project cards with parallax animation
 
 **If all three work, proceed to Feature Testing. If not, see Troubleshooting at the bottom.**
 
@@ -37,10 +37,10 @@
 
 **What it does:** Full-viewport landing with gradient background, gold display title, and floating particle effects.
 
-- [ ] "Portfolio" in large gold serif font, centered
-- [ ] Subtitle "Falling down the rabbit hole..." below it
-- [ ] Floating dots (particles) drift upward behind the text
-- [ ] Background gradient transitions from near-black to dark purple-blue
+- [x] "Portfolio" in large gold serif font, centered
+- [x] Subtitle "Falling down the rabbit hole..." below it
+- [x] Floating dots (particles) drift upward behind the text
+- [x] Background gradient transitions from near-black to dark purple-blue
 
 ---
 
@@ -48,13 +48,13 @@
 
 **What it does:** Project cards animate through a pinned viewport as you scroll, creating a "falling past objects" sensation. This is the centerpiece feature.
 
-- [ ] Scroll down past the hero section
-- [ ] "Projects" heading appears and stays pinned at the top
-- [ ] Cards animate through the viewport one at a time
-- [ ] Even-indexed cards (0, 2) are positioned left; odd cards (1, 3) are positioned right
-- [ ] Cards have diagonal drift (horizontal movement + rotation + scale change)
-- [ ] Cards fade in and fade out at the edges of their scroll window
-- [ ] Floating particles are visible in the projects section background
+- [x] Scroll down past the hero section
+- [x] "Projects" heading appears and stays pinned at the top
+- [x] Cards animate through the viewport one at a time
+- [x] Even-indexed cards (0, 2) are positioned left; odd cards (1, 3) are positioned right
+- [x] Cards have diagonal drift (horizontal movement + rotation + scale change)
+- [x] Cards fade in and fade out at the edges of their scroll window
+- [x] Floating particles are visible in the projects section background
 
 **Known issue:** Card 0 may still appear briefly before its intended scroll window begins (the cards may be visible in a pile at the bottom before their individual animations trigger). This is a scroll timing issue documented in Known Issues below.
 
@@ -69,12 +69,12 @@
 
 **What it does:** Clicking a project card opens a detailed modal that grows from the card's position.
 
-- [ ] Click any project card → modal opens with a "grow from card" animation
-- [ ] Modal shows: gradient header, project name in gold, description, tech badges, demo placeholder, action links
-- [ ] Close modal: click the X button
-- [ ] Close modal: click the dark backdrop behind it
-- [ ] Close modal: press Escape key
-- [ ] After closing, focus returns to the card you clicked
+- [x] Click any project card → modal opens with a "grow from card" animation
+- [x] Modal shows: gradient header, project name in gold, description, tech badges, demo placeholder, action links
+- [x] Close modal: click the X button
+- [x] Close modal: click the dark backdrop behind it
+- [x] Close modal: press Escape key
+- [x] After closing, focus returns to the card you clicked
 
 ---
 
@@ -82,14 +82,14 @@
 
 **What it does:** A single FAB (email icon, bottom-right) opens a slide-in panel with About and Contact content stacked together.
 
-- [ ] Email FAB visible in bottom-right corner
-- [ ] Click FAB → panel slides in from the right
-- [ ] Panel shows "About" section at top (photo placeholder, bio, skills badges)
-- [ ] Divider line separates sections
-- [ ] "Contact" section below (email, GitHub, LinkedIn links)
-- [ ] Close panel: click X button
-- [ ] Close panel: click dark backdrop
-- [ ] Close panel: press Escape key
+- [x] Email FAB visible in bottom-right corner
+- [x] Click FAB → panel slides in from the right
+- [x] Panel shows "About" section at top (photo placeholder, bio, skills badges)
+- [x] Divider line separates sections
+- [x] "Contact" section below (email, GitHub, LinkedIn links)
+- [x] Close panel: click X button
+- [x] Close panel: click dark backdrop
+- [x] Close panel: press Escape key
 
 ---
 
@@ -98,33 +98,33 @@
 **What it does:** When a modal or panel is open, Tab key cycles only within that overlay, preventing focus from escaping to content behind.
 
 **Modal:**
-- [ ] Click a card to open modal
-- [ ] Press Tab — focus moves between close button and links inside the modal
-- [ ] Press Shift+Tab — cycles in reverse
-- [ ] Focus never reaches the FAB or cards behind the modal
+- [x] Click a card to open modal
+- [x] Press Tab — focus moves between close button and links inside the modal
+- [x] Press Shift+Tab — cycles in reverse
+- [x] Focus never reaches the FAB or cards behind the modal
 
 **Panel:**
-- [ ] Click FAB to open panel
-- [ ] Press Tab — focus cycles within panel content (close button, links)
-- [ ] Focus never escapes to page content behind
+- [x] Click FAB to open panel
+- [x] Press Tab — focus cycles within panel content (close button, links)
+- [x] Focus never escapes to page content behind
 
 ---
 
 ### 6. Keyboard & Accessibility (~2 min)
 
-- [ ] Press Tab on page load → skip-link appears ("Skip to main content")
-- [ ] Press Enter on skip-link → focus jumps to `<main>`
-- [ ] All interactive elements have visible purple focus ring when focused via keyboard
-- [ ] Project cards are keyboard-accessible: Tab to card, Enter or Space to open modal
+- [x] Press Tab on page load → skip-link appears ("Skip to main content")
+- [x] Press Enter on skip-link → focus jumps to `<main>`
+- [x] All interactive elements have visible purple focus ring when focused via keyboard
+- [x] Project cards are keyboard-accessible: Tab to card, Enter, or Space to open modal
 
 ---
 
 ### 7. Hover Effects (~1 min)
 
-- [ ] Hover project card → purple glow border + background brightens
-- [ ] Hover card title → text turns gold
-- [ ] Hover FAB → purple glow + color shift
-- [ ] Hover modal links (View Repository, Live Demo) → purple glow
+- [x] Hover project card → purple glow border + background brightens
+- [x] Hover card title → text turns gold
+- [x] Hover FAB → purple glow + color shift
+- [x] Hover modal links (View Repository, Live Demo) → purple glow
 
 ---
 

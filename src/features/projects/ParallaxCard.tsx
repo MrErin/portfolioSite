@@ -1,5 +1,5 @@
 import { motion, useTransform, type MotionValue } from 'framer-motion';
-import { PARALLAX_CONFIG, getCardScrollWindow, getCardOpacityRange } from '@/data/animationConfig';
+import { PARALLAX_CONFIG, getCardScrollWindow, getCardOpacityRange } from './animationConfig';
 import { ProjectCard } from './ProjectCard';
 import type { Project } from './types';
 
@@ -80,6 +80,8 @@ const ParallaxCard = ({
   return (
     <motion.div
       className={`absolute w-[90%] max-w-sm md:max-w-md ${horizontalClass}`}
+      // Prevent cards from flashing before useTransform computes scroll-based opacity
+      initial={{ opacity: 0 }}
       style={{
         y: translateY,
         x: translateX,

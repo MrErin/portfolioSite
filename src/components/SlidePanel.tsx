@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import { motion } from 'framer-motion';
-import { useFocusTrap } from '@/hooks';
+import { FocusTrap } from 'focus-trap-react';
 
 interface SlidePanelProps {
   children: ReactNode;
@@ -20,7 +20,6 @@ interface SlidePanelProps {
  * - Escape key handling is managed by parent (App.tsx)
  */
 const SlidePanel = ({ children, onClose, ariaLabel }: SlidePanelProps) => {
-  const focusTrapRef = useFocusTrap({ isActive: true });
   return (
     <>
       {/* Backdrop */}
@@ -35,31 +34,37 @@ const SlidePanel = ({ children, onClose, ariaLabel }: SlidePanelProps) => {
       />
 
       {/* Slide-in panel */}
-      <motion.div
-        ref={focusTrapRef}
-        initial={{ x: '100%' }}
-        animate={{ x: 0 }}
-        exit={{ x: '100%' }}
-        transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-        onClick={(e) => e.stopPropagation()}
-        role="dialog"
-        aria-modal="true"
-        aria-label={ariaLabel}
-        className="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-void border-l border-border shadow-2xl overflow-y-auto"
+      <FocusTrap
+        focusTrapOptions={{
+          escapeDeactivates: false,
+          allowOutsideClick: true,
+        }}
       >
-        {/* Close button */}
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="Close panel"
-          className="absolute top-4 right-4 w-8 h-8 rounded-full bg-surface border border-border text-muted hover:text-text-primary transition-colors duration-300 flex items-center justify-center z-10"
+        <motion.div
+          initial={{ x: '100%' }}
+          animate={{ x: 0 }}
+          exit={{ x: '100%' }}
+          transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+          onClick={(e) => e.stopPropagation()}
+          role="dialog"
+          aria-modal="true"
+          aria-label={ariaLabel}
+          className="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-void border-l border-border shadow-2xl overflow-y-auto"
         >
-          <FaTimes />
-        </button>
+          {/* Close button */}
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close panel"
+            className="absolute top-4 right-4 w-8 h-8 rounded-full bg-surface border border-border text-muted hover:text-text-primary transition-colors duration-300 flex items-center justify-center z-10"
+          >
+            <FaTimes />
+          </button>
 
-        {/* Panel content */}
-        <div className="p-6">{children}</div>
-      </motion.div>
+          {/* Panel content */}
+          <div className="p-6">{children}</div>
+        </motion.div>
+      </FocusTrap>
     </>
   );
 };
