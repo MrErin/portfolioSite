@@ -2,7 +2,7 @@
  * Section height in vh units. Exported so ProjectsSection stays in sync.
  * A taller section = more scroll runway for the parallax effect.
  */
-export const SECTION_HEIGHT_VH = 400;
+export const SECTION_HEIGHT_VH = 800;
 
 /**
  * With offset ['start end', 'end start'], scroll progress 0→1 spans
@@ -28,7 +28,7 @@ const WINDOW_RATIO = 0.3;
  * Small buffer inside the sticky range so cards don't start/end
  * at the exact moment the sticky pins/releases.
  */
-const INNER_PAD_RATIO = 0.05;
+const INNER_PAD_RATIO = 0.01;
 
 /**
  * Get the scroll window (start/end range) for a specific card.
@@ -91,9 +91,9 @@ export const getCardOpacityRange = (
  */
 export const PARALLAX_CONFIG = {
   /** Vertical displacement: cards start below, end above (in pixels) */
-  translateYOutput: [600, -600],
+  translateYOutput: [1000, -2000],
   /** More dramatic rotation for dynamic movement */
-  rotateOutput: [-10, 10],
+  rotateOutput: [-20, 20],
   /** More size variation for depth */
   scaleOutput: [0.9, 1.1],
   /**
