@@ -41,21 +41,18 @@ const ParallaxCard = ({
   const { input: opacityInput, output: opacityOutput } = getCardOpacityRange(index, totalCards);
   const opacity = useTransform(scrollYProgress, opacityInput, opacityOutput);
 
-  // Vertical travel: card moves from +600px (below viewport) to -600px (above)
   const translateY = useTransform(
     scrollYProgress,
     [scrollStart, scrollEnd],
     PARALLAX_CONFIG.translateYOutput
   );
 
-  // Rotation applied within the card's scroll window
   const rotate = useTransform(
     scrollYProgress,
     [scrollStart, scrollEnd],
     PARALLAX_CONFIG.rotateOutput
   );
 
-  // Scale pulse applied within the card's scroll window
   const scale = useTransform(
     scrollYProgress,
     [scrollStart, scrollEnd],
