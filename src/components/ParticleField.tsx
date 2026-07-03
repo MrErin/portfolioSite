@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useReducedMotion } from 'framer-motion';
+import { useWhimsy } from '@/features/whimsy';
 
 interface Particle {
   id: number;
@@ -20,7 +21,6 @@ const PARTICLE_COLORS = [
 ];
 
 /**
- * Generate particle data once and cache it.
  * Moved out of render to satisfy React purity rules (Math.random is impure).
  */
 const generateParticles = (): Particle[] =>
@@ -36,15 +36,16 @@ const generateParticles = (): Particle[] =>
 
 /**
  * Decorative particle field with floating dots.
- * Purely decorative - disabled for prefers-reduced-motion.
+ * Hidden when prefers-reduced-motion is active or whimsy particles are disabled.
  */
 const ParticleField = () => {
   const prefersReducedMotion = useReducedMotion();
+  const { config } = useWhimsy();
 
   // 60 particles at 2-8px keeps GPU cost low (CSS transform + opacity are composited)
   const particles = useMemo(() => generateParticles(), []);
 
-  if (prefersReducedMotion) {
+  if (prefersReducedMotion || !config.particles) {
     return null;
   }
 

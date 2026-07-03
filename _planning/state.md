@@ -1,7 +1,7 @@
 # Project State
 
 ## Current Phase
-Phase: 2 — Slider Control
+Phase: 3 — Component Integration
 Status: complete
 Last Updated: 2026-07-03
 
@@ -15,6 +15,9 @@ Last Updated: 2026-07-03
 | 2026-07-03 | Dewhimsifier feature requirements written. Roadmap initialized. 3 phases planned. |
 | 2026-07-03 | Phase 1 complete. WhimsyContext & Config shipped and UA confirmed. |
 | 2026-07-03 | Phase 2 complete. WhimsySlider built — fixed top-left, native range input, pulse animation, tick marks, a11y. Wired into App.tsx. |
+| 2026-07-03 | Phase 3 planned. Component Integration — 4 tasks wiring ParticleField, ProjectCard, ProjectModal, ProjectsSection to WhimsyContext. |
+| 2026-07-03 | Phase 3 built. All 4 components now consume useWhimsy(). ParticleField respects config.particles, ProjectCard swaps gradient on config.boringImages, ProjectModal switches animation on config.growFromCard, ProjectsSection toggles parallax/grid on config.parallax. TypeScript + ESLint + Vite build all clean. |
+| 2026-07-03 | Phase 3 UA confirmed. All checks passed. 2 decisions logged (grey gradient, layout jump). 1 new deferred item (close button focus state). Phase closed. |
 
 ## Blockers
 None.
