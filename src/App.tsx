@@ -6,7 +6,7 @@ import { ProjectsSection, ProjectModal } from '@/features/projects';
 import { AboutPanel } from '@/features/about';
 import { ContactPanel } from '@/features/contact';
 import { Fab, SlidePanel } from '@/components';
-import { WhimsyProvider } from '@/features/whimsy';
+import { WhimsyProvider, WhimsySlider } from '@/features/whimsy';
 import type { Project } from '@/features/projects/types';
 
 const App = () => {
@@ -64,6 +64,7 @@ const App = () => {
       <a href="#main-content" className="skip-link">
         Skip to main content
       </a>
+      <WhimsySlider />
       <main id="main-content" className="bg-abyss min-h-screen">
         <Hero />
         <ProjectsSection onProjectClick={handleProjectClick} />

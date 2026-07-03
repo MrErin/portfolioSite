@@ -1,7 +1,7 @@
 # Project State
 
 ## Current Phase
-Phase: 1 — WhimsyContext & Config
+Phase: 2 — Slider Control
 Status: complete
 Last Updated: 2026-07-03
 
@@ -14,6 +14,7 @@ Last Updated: 2026-07-03
 | 2026-07-03 | Archived MVP to `_planning/archive/mvp/`. Extracted `project-requirements/` (mvp.md, core.md, index.md). Cycled 12 decisions. Workspace cleared. |
 | 2026-07-03 | Dewhimsifier feature requirements written. Roadmap initialized. 3 phases planned. |
 | 2026-07-03 | Phase 1 complete. WhimsyContext & Config shipped and UA confirmed. |
+| 2026-07-03 | Phase 2 complete. WhimsySlider built — fixed top-left, native range input, pulse animation, tick marks, a11y. Wired into App.tsx. |
 
 ## Blockers
 None.
