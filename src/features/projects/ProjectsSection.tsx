@@ -1,8 +1,8 @@
 import { useRef } from 'react';
 import { useReducedMotion, useScroll } from 'framer-motion';
-import { ParticleField } from '@/components';
+import { ParticleField } from '@/components/ParticleField';
 import { projects } from '@/data/projects';
-import { useWhimsy } from '@/features/whimsy';
+import { useWhimsy } from '@/features/whimsy/WhimsyContext';
 import { SECTION_HEIGHT_VH } from './animationConfig';
 import { ParallaxCard } from './ParallaxCard';
 import { ProjectCard } from './ProjectCard';

@@ -16,9 +16,10 @@ const WhimsySlider = () => {
 
   return (
     <div
-      className="fixed top-4 left-4 z-30"
+      className="fixed z-30"
       style={{
-        padding: 'max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-left))',
+        top: 'max(1rem, env(safe-area-inset-top))',
+        left: 'max(1rem, env(safe-area-inset-left))',
       }}
     >
       <p className="font-body text-xs text-text-muted mb-1">Whimsy</p>

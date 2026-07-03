@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useReducedMotion } from 'framer-motion';
-import { useWhimsy } from '@/features/whimsy';
+import { useWhimsy } from '@/features/whimsy/WhimsyContext';
 
 interface Particle {
   id: number;

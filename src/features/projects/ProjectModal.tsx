@@ -1,8 +1,12 @@
-import { FaGithub, FaExternalLinkAlt, FaTimes } from 'react-icons/fa';
+import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { FocusTrap } from 'focus-trap-react';
-import { useWhimsy } from '@/features/whimsy';
+import { useWhimsy } from '@/features/whimsy/WhimsyContext';
+import { CloseButton } from '@/components/CloseButton';
 import type { Project } from './types';
+
+const LINK_CLASS =
+  'inline-flex items-center gap-2 px-4 py-2 bg-surface border border-border rounded hover:border-purple-dark hover:text-purple-glow hover:shadow-glow-purple transition-all duration-300';
 
 interface ProjectModalProps {
   project: Project;
@@ -59,14 +63,7 @@ const ProjectModal = ({ project, onClose, cardOrigin }: ProjectModalProps) => {
           onClick={(e) => e.stopPropagation()}
           className="bg-void border border-border rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto relative"
         >
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close modal"
-            className="absolute top-4 right-4 w-8 h-8 rounded-full bg-surface border border-border text-muted hover:text-text-primary transition-colors duration-300 flex items-center justify-center z-10"
-          >
-            <FaTimes />
-          </button>
+          <CloseButton onClick={onClose} ariaLabel="Close modal" />
 
           <div
             className="h-32 bg-gradient-to-br from-hollow via-shade to-dusk rounded-t-lg"
@@ -100,7 +97,7 @@ const ProjectModal = ({ project, onClose, cardOrigin }: ProjectModalProps) => {
                 href={project.repoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-surface border border-border rounded hover:border-purple-dark hover:text-purple-glow hover:shadow-glow-purple transition-all duration-300"
+                className={LINK_CLASS}
               >
                 <FaGithub />
                 <span>View Repository</span>
@@ -111,7 +108,7 @@ const ProjectModal = ({ project, onClose, cardOrigin }: ProjectModalProps) => {
                   href={project.demoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-surface border border-border rounded hover:border-purple-dark hover:text-purple-glow hover:shadow-glow-purple transition-all duration-300"
+                  className={LINK_CLASS}
                 >
                   <FaExternalLinkAlt />
                   <span>Live Demo</span>
