@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { FaEnvelope } from 'react-icons/fa';
-import type { Project } from '@/features/projects/types';
 import { Hero } from '@/features/hero';
 import { ProjectsSection, ProjectModal } from '@/features/projects';
 import { AboutPanel } from '@/features/about';
 import { ContactPanel } from '@/features/contact';
 import { Fab, SlidePanel } from '@/components';
+import { WhimsyProvider } from '@/features/whimsy';
+import type { Project } from '@/features/projects/types';
 
 const App = () => {
   // Overlay state
@@ -16,7 +17,6 @@ const App = () => {
 
   // Handlers
   const handleProjectClick = (project: Project, rect: DOMRect) => {
-    // Calculate card center from bounding rect
     const cardCenterX = rect.left + rect.width / 2;
     const cardCenterY = rect.top + rect.height / 2;
     setCardOrigin({ x: cardCenterX, y: cardCenterY });
@@ -60,7 +60,7 @@ const App = () => {
   }, [selectedProject, panelOpen]);
 
   return (
-    <>
+    <WhimsyProvider>
       <a href="#main-content" className="skip-link">
         Skip to main content
       </a>
@@ -92,7 +92,7 @@ const App = () => {
           </SlidePanel>
         )}
       </AnimatePresence>
-    </>
+    </WhimsyProvider>
   );
 };
 
