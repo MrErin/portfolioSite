@@ -2,21 +2,20 @@ import type { Project } from '@/features/projects/types.ts';
 
 export const projects: Project[] = [
   {
-    id: 'cheshire-engine',
-    name: 'Cheshire Engine',
-    description:
-      'A game engine built from scratch featuring a custom physics system and real-time rendering. The engine handles 2D sprite animation with optional 3D perspective effects.',
-    techStack: ['Rust', 'WebAssembly', 'WebGL'],
-    demoUrl: 'https://cheshire-engine.demo.example.com',
-    repoUrl: 'https://github.com/user/cheshire-engine',
+    id: 'unfamiliar',
+    name: 'Unfamiliar',
+    description: 'AI powered codebase exploration tool with gamified investigation missions',
+    techStack: ['Python', 'Langchain/Langgraph', 'Textual'],
+    demoUrl: 'https://pypi.org/project/unfamiliar/',
+    repoUrl: 'https://github.com/MrErin/unfamiliar',
   },
   {
-    id: 'looking-glass-api',
-    name: 'Looking Glass API',
+    id: 'singlePlayerCoOp',
+    name: 'Single Player Co-Op',
     description:
-      'A RESTful API gateway that provides unified access to multiple Wonderland services. Features rate limiting, caching, and comprehensive request logging.',
-    techStack: ['TypeScript', 'Node.js', 'Express', 'Redis'],
-    repoUrl: 'https://github.com/user/looking-glass-api',
+      'A harness for AI-assisted development, providing guardrails, standards, and checkpoints to keep human hands on the wheel.',
+    techStack: ['AI Context Engineering'],
+    repoUrl: 'https://github.com/MrErin/singlePlayerCoOp',
   },
   {
     id: 'caterpillar-cli',
