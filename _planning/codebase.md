@@ -15,7 +15,7 @@
 
 ## Architecture
 
-Feature-based structure. Direct imports from source files — no barrel files.
+Component-based structure. Direct imports from source files — no barrel files.
 
 ```
 src/
@@ -23,31 +23,25 @@ src/
 ├── main.tsx                   # Entry point
 ├── index.css                  # Tailwind v4 @theme + global styles + @keyframes float + whimsy-pulse + .whimsy-range slider styles
 ├── components/
-│   ├── CloseButton.tsx        # Shared close button (X icon, focus-visible ring)
-│   ├── Fab.tsx                # Generic floating action button (icon, label, onClick props)
-│   ├── SlidePanel.tsx         # Reusable slide-in overlay with focus-trap-react (backdrop + animation + close)
-│   ├── ParticleField.tsx      # Decorative floating dots (hidden by prefers-reduced-motion or config.particles)
-├── features/
-│   ├── hero/
-│   │   └── Hero.tsx           # Full-viewport hero with gradient bg + ParticleField
+│   ├── about/
+│   │   ├── AboutPanel.tsx     # Bio, skills badges, photo placeholder (section for combined panel)
+│   │   └── ContactPanel.tsx   # Email/GitHub/LinkedIn links (section for combined panel)
+│   ├── core/
+│   │   ├── CloseButton.tsx    # Shared close button (X icon, focus-visible ring)
+│   │   ├── Fab.tsx            # Generic floating action button (icon, label, onClick props)
+│   │   ├── Hero.tsx           # Full-viewport hero with gradient bg + ParticleField
+│   │   ├── ParticleField.tsx  # Decorative floating dots (hidden by prefers-reduced-motion or config.particles)
+│   │   └── SlidePanel.tsx     # Reusable slide-in overlay with focus-trap-react (backdrop + animation + close)
 │   ├── projects/
-│   │   ├── animationConfig.ts # PARALLAX_CONFIG, SECTION_HEIGHT_VH, scroll window calculators (moved from data/)
-│   │   ├── ProjectCard.tsx    # Card with gradient placeholder (swaps to grey on config.boringImages), tech badges, purple glow on hover, clickable with rect capture
+│   │   ├── animationConfig.ts # PARALLAX_CONFIG, SECTION_HEIGHT_VH, scroll window calculators
 │   │   ├── ParallaxCard.tsx   # Wrapper with scroll-linked parallax transforms (PARALLAX_CONFIG), forwards onProjectClick
+│   │   ├── ProjectCard.tsx    # Card with gradient placeholder (swaps to grey on config.boringImages), tech badges, purple glow on hover, clickable with rect capture
 │   │   ├── ProjectModal.tsx   # Dialog with grow-from-card animation, focus-trap-react, close btn, links, demo placeholder
 │   │   ├── ProjectsSection.tsx# 3 render modes: sticky parallax (Stop 0), grid+particles (Stops 1–2), vertical stack (reduced motion); inline useScroll
-│   │   ├── types.ts          # Project interface (relocated from types/)
-│   ├── about/
-│   │   └── AboutPanel.tsx     # Bio, skills badges, photo placeholder (section for combined panel)
-│   └── contact/
-│       └── ContactPanel.tsx   # Email/GitHub/LinkedIn links (section for combined panel)
+│   │   └── types.ts          # Project interface
 │   └── whimsy/
-│       ├── WhimsyContext.tsx # Context + provider, 3-stop level model (WhimsyLevel → WhimsyConfig flags)
-│       └── WhimsySlider.tsx  # Fixed native range input, 3 stops, safe-area-aware positioning
-├── [hooks/ removed — replaced by library equivalents]
-│   # useReducedMotion → framer-motion built-in
-│   # useScrollProgress → inlined in ProjectsSection
-│   # useFocusTrap → focus-trap-react component
+│       ├── WhimsyContext.tsx  # Context + provider, 3-stop level model (WhimsyLevel → WhimsyConfig flags)
+│       └── WhimsySlider.tsx   # Fixed native range input, 3 stops, safe-area-aware positioning
 └── data/
     └── projects.ts            # 4 mock projects (themed names)
 ```
@@ -69,7 +63,7 @@ CSS-first config via `@theme` block in `src/index.css`. Key tokens:
 - Semantic HTML (`<section>`, `<article>`, `<nav>`, `<dialog>`)
 - ARIA labels on all interactive elements and landmarks
 - Skip-link for keyboard navigation
-- Direct imports from source files — no barrel files
+- Direct imports from source files — no barrel files, no features/ directory
 - **Whimsy system:** 3-stop model (`WHIMSY_LEVELS`) with feature flags (`parallax`, `particles`, `growFromCard`, `boringImages`), defaults to max whimsy (Stop 0) on every load, no persistence
 - **Parallax animation (Stop 0 only):** Diagonal Drift hardcoded (PARALLAX_CONFIG), disabled at Stops 1–2
 - Scroll-linked animations via Framer Motion's `useScroll` + `useTransform`

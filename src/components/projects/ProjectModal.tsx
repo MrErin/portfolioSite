@@ -1,8 +1,8 @@
 import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { FocusTrap } from 'focus-trap-react';
-import { useWhimsy } from '@/features/whimsy/WhimsyContext';
-import { CloseButton } from '@/components/CloseButton';
+import { useWhimsy } from '@/components/whimsy/WhimsyContext';
+import { CloseButton } from '@/components/core/CloseButton';
 import type { Project } from './types';
 
 const LINK_CLASS =

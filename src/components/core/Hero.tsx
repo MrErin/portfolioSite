@@ -1,4 +1,4 @@
-import { ParticleField } from '@/components/ParticleField';
+import { ParticleField } from '@/components/core/ParticleField';
 
 const Hero = () => {
   return (

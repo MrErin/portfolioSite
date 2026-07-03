@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { FaEnvelope } from 'react-icons/fa';
-import { Hero } from '@/features/hero/Hero';
-import { ProjectsSection } from '@/features/projects/ProjectsSection';
-import { ProjectModal } from '@/features/projects/ProjectModal';
-import { AboutPanel } from '@/features/about/AboutPanel';
-import { ContactPanel } from '@/features/contact/ContactPanel';
-import { Fab } from '@/components/Fab';
-import { SlidePanel } from '@/components/SlidePanel';
-import { WhimsyProvider } from '@/features/whimsy/WhimsyContext';
-import { WhimsySlider } from '@/features/whimsy/WhimsySlider';
-import type { Project } from '@/features/projects/types';
+import { Hero } from '@/components/core/Hero';
+import { ProjectsSection } from '@/components/projects/ProjectsSection';
+import { ProjectModal } from '@/components/projects/ProjectModal';
+import { AboutPanel } from '@/components/about/AboutPanel';
+import { ContactPanel } from '@/components/about/ContactPanel';
+import { Fab } from '@/components/core/Fab';
+import { SlidePanel } from '@/components/core/SlidePanel';
+import { WhimsyProvider } from '@/components/whimsy/WhimsyContext';
+import { WhimsySlider } from '@/components/whimsy/WhimsySlider';
+import type { Project } from '@/components/projects/types';
 
 const App = () => {
   // Overlay state

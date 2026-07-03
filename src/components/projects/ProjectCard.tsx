@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { useWhimsy } from '@/features/whimsy/WhimsyContext';
+import { useWhimsy } from '@/components/whimsy/WhimsyContext';
 import type { Project } from './types';
 
 interface ProjectCardProps {
