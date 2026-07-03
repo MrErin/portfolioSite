@@ -14,3 +14,8 @@
 - CSS particle effects in Hero and Projects section
 - Responsive: mobile-first (375px), cards alternate left/right on desktop
 - 4 Alice-themed mock projects with TypeScript Project interface
+
+## Dewhimsifier (→ feature-dewhimsifier.md)
+- Three-stop whimsy slider resets to max on every load, drives config flags via WhimsyContext
+- Components branch on config flags: parallax/grid layout, particles on/off, modal animation style, thumbnail palette
+- Native range input with CSS pulse animation, `prefers-reduced-motion` respected, `aria-live` stop names
