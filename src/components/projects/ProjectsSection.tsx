@@ -1,7 +1,8 @@
 import { useRef } from 'react';
 import { useReducedMotion, useScroll } from 'framer-motion';
-import { ParticleField } from '@/components';
+import { ParticleField } from '@/components/core/ParticleField';
 import { projects } from '@/data/projects';
+import { useWhimsy } from '@/components/whimsy/WhimsyContext';
 import { SECTION_HEIGHT_VH } from './animationConfig';
 import { ParallaxCard } from './ParallaxCard';
 import { ProjectCard } from './ProjectCard';
@@ -23,6 +24,7 @@ interface ProjectsSectionProps {
  * vertical card stack.
  */
 const ProjectsSection = ({ onProjectClick }: ProjectsSectionProps) => {
+  const { config } = useWhimsy();
   const prefersReducedMotion = useReducedMotion();
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
@@ -38,6 +40,22 @@ const ProjectsSection = ({ onProjectClick }: ProjectsSectionProps) => {
         <div className="max-w-4xl mx-auto">
           <h2 className="font-heading text-purple-light text-4xl mb-12 text-center">Projects</h2>
           <div className="flex flex-col gap-6">
+            {projects.map((project) => (
+              <ProjectCard key={project.id} project={project} onClick={onProjectClick} />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (!config.parallax) {
+    return (
+      <section aria-label="Projects" className="relative min-h-screen bg-deep py-20 px-4">
+        <ParticleField />
+        <div className="relative z-10 max-w-4xl mx-auto">
+          <h2 className="font-heading text-purple-light text-4xl mb-12 text-center">Projects</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {projects.map((project) => (
               <ProjectCard key={project.id} project={project} onClick={onProjectClick} />
             ))}
@@ -66,7 +84,7 @@ const ProjectsSection = ({ onProjectClick }: ProjectsSectionProps) => {
           Projects
         </h2>
 
-        {/* Cards positioned absolutely within the sticky viewport */}
+        {/* Each card is staggered to enter the viewport at a different scroll offset */}
         {projects.map((project, index) => (
           <ParallaxCard
             key={project.id}

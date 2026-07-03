@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+import { useWhimsy } from '@/components/whimsy/WhimsyContext';
 import type { Project } from './types';
 
 interface ProjectCardProps {
@@ -8,6 +9,11 @@ interface ProjectCardProps {
 
 const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
   const articleRef = useRef<HTMLElement>(null);
+  const { config } = useWhimsy();
+
+  const thumbnailClass = config.boringImages
+    ? 'h-40 bg-gradient-to-br from-gray-800 via-gray-700 to-gray-600'
+    : 'h-40 bg-gradient-to-br from-hollow via-shade to-dusk';
 
   const handleClick = () => {
     if (onClick && articleRef.current) {
@@ -32,7 +38,7 @@ const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
       onKeyDown={handleKeyDown}
     >
       {/* Gradient thumbnail placeholder */}
-      <div className="h-40 bg-gradient-to-br from-hollow via-shade to-dusk" aria-hidden="true" />
+      <div className={thumbnailClass} aria-hidden="true" />
 
       {/* Card content */}
       <div className="p-6">

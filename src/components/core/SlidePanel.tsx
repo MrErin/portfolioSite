@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
-import { FaTimes } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { FocusTrap } from 'focus-trap-react';
+import { CloseButton } from './CloseButton';
 
 interface SlidePanelProps {
   children: ReactNode;
@@ -51,15 +51,7 @@ const SlidePanel = ({ children, onClose, ariaLabel }: SlidePanelProps) => {
           aria-label={ariaLabel}
           className="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-void border-l border-border shadow-2xl overflow-y-auto"
         >
-          {/* Close button */}
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close panel"
-            className="absolute top-4 right-4 w-8 h-8 rounded-full bg-surface border border-border text-muted hover:text-text-primary transition-colors duration-300 flex items-center justify-center z-10"
-          >
-            <FaTimes />
-          </button>
+          <CloseButton onClick={onClose} ariaLabel="Close panel" />
 
           {/* Panel content */}
           <div className="p-6">{children}</div>

@@ -174,3 +174,79 @@ button {
 .animate-float {
   animation: float linear infinite;
 }
+
+/* Whimsy slider pulse animation */
+@keyframes whimsy-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 8px rgba(155, 126, 180, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(155, 126, 180, 0.6);
+  }
+}
+
+.whimsy-pulse {
+  animation: whimsy-pulse 3s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .whimsy-pulse {
+    animation: none;
+  }
+}
+
+/* Range input base styles */
+.whimsy-range {
+  -webkit-appearance: none;
+  appearance: none;
+  min-height: 44px;
+  background: transparent;
+  cursor: pointer;
+  width: 100%;
+}
+
+.whimsy-range::-webkit-slider-runnable-track {
+  height: 4px;
+  background: var(--color-purple);
+  border-radius: 2px;
+}
+
+.whimsy-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--color-purple-light);
+  border: 1px solid var(--color-purple-glow);
+  margin-top: -6px;
+}
+
+.whimsy-range::-moz-range-track {
+  height: 4px;
+  background: var(--color-purple);
+  border-radius: 2px;
+  border: none;
+}
+
+.whimsy-range::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--color-purple-light);
+  border: 1px solid var(--color-purple-glow);
+}
+
+.whimsy-range:focus-visible {
+  outline: none;
+}
+
+.whimsy-range:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.whimsy-range:focus-visible::-moz-range-thumb {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}

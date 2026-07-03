@@ -1,191 +1,147 @@
-# Project: Portfolio Site
+# Feature Requirements — Dewhimsifier
 
-## Overview
-Building an interactive portfolio with a "falling down the rabbit hole" theme. Dark gothic/whimsical mood (Alice-inspired but not literal). This is a PROTOTYPE phase - focus on feel and interaction, not final assets.
+**Status:** Complete
+**Date:** 2026-07-03
 
-## Claude Code Skills
-Use the local iterative-build, and my-style skills for this application.
-Use the frontend-design skill from Anthropic's public repository located here: https://github.com/anthropics/skills/blob/main/skills/frontend-design/SKILL.md
+---
 
-## Technical Requirements
+## Feature Definition
 
-### Tech Stack
-- React + TypeScript (Vite)
-- Tailwind CSS
-- Framer Motion (for animations)
-- React Icons (for nav buttons)
+A persistent, always-visible slider that lets visitors reduce the site's "whimsy level" from maximum (current portfolio experience) down to a professional/corporate presentation. Resets to maximum whimsy on every page load. Intended to demonstrate range — visitors can see the creative version first, then dial it back to confirm the developer can do buttoned-up work too.
 
-## UI/UX Requirements
+---
 
-### Navigation
-Floating action buttons (FABs) in corner:
-- Small circular buttons
-- Always visible (fixed position)
-- One for About, one for Contact
-- Subtle glow/hover effects
-- Consider bottom-right or top-right placement
+## User Stories
 
-### Modal Behavior
-Hybrid approach:
-- **Transition**: Card grows from its scroll position (Option C)
-- **Final state**: Full overlay modal (Option A)
-- Dims background
-- Close via X button or click outside
-- Smooth animation using Framer Motion
+- As a visitor, I see the site at full whimsy on load so my first impression is the creative experience.
+- As a visitor, I notice a subtle slider control and can move it to reduce visual complexity.
+- As a hiring manager, I can set the slider to minimum whimsy and see a clean, professional grid layout.
 
-### Falling Animation - TOGGLEABLE OPTIONS
-**CRITICAL**: Build with a toggle/config to switch between animation modes:
+---
 
-**Mode 1: Straight Up**
-- Projects float up from bottom
-- Vertical movement only
-- Clean, controlled feel
+## Whimsy Stops
 
-**Mode 2: Diagonal Drift**
-- Projects float up AND drift left/right
-- Alternating directions (or random slight variance)
-- More chaotic "tumbling through space" feel
+Three discrete stops. Color palette, gothic typography, and dark theme survive all three.
 
-**Implementation**:
-- Create a config constant or prop that switches between modes
-- Button or keyboard shortcut to toggle (for rapid testing)
-- Both modes should use same easing/timing structure for fair comparison
+| Stop | Name | What's active |
+|------|------|----------------|
+| 0 | *Curiouser and Curiouser* | Parallax diagonal drift · particles · grow-from-card modal · gradient image placeholders |
+| 1 | *Sensibly Strange* | Grid layout · particles · grow-from-card modal · gradient image placeholders |
+| 2 | *Quarterly Review* | Grid layout · no particles · simpler modal transition · grey/desaturated image placeholders |
 
-### Scroll-Triggered Animation Behavior
-- Projects initially below viewport (invisible)
-- Trigger when 20-30% enters viewport
-- Staggered timing (each appears ~200ms after previous)
-- Animation properties:
-    - Opacity: 0 → 1
-    - Transform: translateY + scale + rotate (subtle)
-    - Duration: ~800ms
-    - Easing: ease-out or custom cubic-bezier
+---
 
-### Visual Mood (No Images Yet)
-- Dark background (deep purples, dark blues, near-black)
-- CSS gradients for depth
-- Subtle particle effects or floating dots (optional)
-- Gothic typography (serif headers, clean sans-serif body)
-- Accent colors: deep reds, golds, or teals
+## Architecture
 
-## Content Structure
+### WhimsyConfig (single source of truth)
 
-### Hero Section
-- Name/title
-- Tagline
-- Subtle gradient background
-- Minimal text (let projects be the focus)
+One config object maps each stop to feature flags. Changing what a stop includes = editing one line.
 
-### Projects Section
-- 3-4 project cards
-- Each card shows:
-    - Project name
-    - Tech stack (small badges/chips)
-    - Thumbnail or gradient placeholder
-    - Subtle hover effect
-- Cards positioned for scroll animation
+```ts
+type WhimsyLevel = 0 | 1 | 2;
 
-### Project Modal Content
-When card clicked:
-- Project name (header)
-- Description (2-3 sentences)
-- Tech stack (badges)
-- Demo section (iframe or image placeholder for now)
-- Links:
-    - View Repository (GitHub icon)
-    - Live Demo (if applicable)
-- Close button (X in corner)
-
-### About/Contact Sections
-Trigger from FABs:
-- Slide-in panel or inline section reveal
-- About: Short bio, skills, photo placeholder
-- Contact: Email, GitHub, LinkedIn links (icons)
-
-## Development Phases
-
-### Phase 0: Project Setup
-- Create Vite + React + TypeScript project
-- Install dependencies: Tailwind, Framer Motion, React Icons
-- Configure Tailwind with dark theme colors
-- Basic file structure
-
-### Phase 1: Layout & Structure
-- Hero section (static)
-- Projects section container
-- Project cards (static, no animation yet)
-- FAB navigation buttons
-- Modal component (structure only)
-
-### Phase 2: Animation System - PRIORITY
-- Implement scroll detection (Intersection Observer)
-- Build BOTH animation modes (straight up + diagonal drift)
-- Add toggle mechanism to switch modes
-- Staggered timing system
-- Test and refine feel
-
-### Phase 3: Interactivity
-- Card click → modal transition (grow from card position)
-- Modal state management
-- Close modal (button + click outside)
-- FAB click handlers (About/Contact reveal)
-
-### Phase 4: Polish
-- Hover states
-- Focus management (accessibility)
-- Keyboard navigation (Esc to close modal)
-- Responsive breakpoints
-- Dark mood styling refinement
-
-## Key Requirements
-
-### Animation Toggle System
-**Must have easy way to test animation modes:**
-- Option 1: Add dev panel with buttons to switch modes
-- Option 2: Keyboard shortcut (e.g., press 'A' to cycle)
-- Option 3: URL parameter (?animation=diagonal)
-
-**Preference**: Whatever allows fastest iteration during development.
-
-### Accessibility
-- Keyboard navigation for all interactions
-- Focus trapping in modal
-- ARIA labels for FABs
-- Semantic HTML
-- Skip links if needed
-
-### Responsive Design
-- Mobile: Stack projects, adjust FAB positions
-- Tablet: 2-column grid
-- Desktop: Full effect, optimal spacing
-
-
-## Placeholder Data
-Use this structure for project cards:
-```typescript
-interface Project {
-  id: string;
-  name: string;
-  description: string;
-  techStack: string[];
-  demoUrl?: string;
-  repoUrl: string;
-  // thumbnail: string; // Add later with real images
+interface WhimsyConfig {
+  parallax: boolean;
+  particles: boolean;
+  growFromCard: boolean;
+  boringImages: boolean;
 }
+
+const WHIMSY_LEVELS: Record<WhimsyLevel, WhimsyConfig> = {
+  0: { parallax: true,  particles: true,  growFromCard: true,  boringImages: false },
+  1: { parallax: false, particles: true,  growFromCard: true,  boringImages: false },
+  2: { parallax: false, particles: false, growFromCard: false, boringImages: true  },
+};
 ```
 
-Create 3-4 mock projects with realistic data.
+### WhimsyContext
 
-## Success Criteria for Prototype
-- Scroll animation feels smooth and intentional
-- Can easily toggle between animation modes
-- Modal transition (card → overlay) is smooth
-- FABs are accessible and functional
-- Dark mood is established with CSS
-- Runs smoothly on local dev server
+React context providing `level` (current stop) and `config` (resolved flags) to all components. Provider wraps the root in `App.tsx`. No localStorage — initialises to `0` on every load.
 
-## Notes
-- This is PROTOTYPE phase - prioritize feel over pixel perfection
-- Use placeholder content liberally
-- Focus on getting animations right
-- Real images/content come later after we nail the UX
+### Components affected
+
+| Component | Change |
+|-----------|--------|
+| `ProjectsSection.tsx` | Conditionally renders sticky parallax vs standard grid based on `config.parallax` |
+| `ParticleField.tsx` | Renders `null` when `config.particles` is false |
+| `ProjectModal.tsx` | Conditionally uses grow-from-card animation vs simpler slide/fade when `config.growFromCard` is false |
+| `ProjectCard.tsx` | Swaps gradient placeholder for grey gradient box when `config.boringImages` is true |
+| `App.tsx` | Wraps tree with `WhimsyProvider` |
+
+### New components
+
+| Component | Description |
+|-----------|-------------|
+| `WhimsyContext.tsx` | Context, provider, config object, `useWhimsy` hook |
+| `WhimsySlider.tsx` | Fixed top-left slider control with attention animation |
+
+---
+
+## UI/UX
+
+### Slider control
+
+- **Position:** Fixed, top-left corner, with `safe-area-inset` padding for mobile notch handling
+- **Element:** Native `<input type="range" min="0" max="2" step="1">` — keyboard-accessible out of the box (arrow keys), touch-friendly when sized correctly (min 44px touch target)
+- **Labels:** Current stop name displayed beneath or beside the slider (e.g. *Curiouser and Curiouser*). Tick marks on the track for the three positions.
+- **Control label:** Small "Whimsy" label or wand icon above/beside the control so its purpose is clear.
+
+### Attention animation
+
+- **Type:** Slow, subtle pulse — likely a gentle glow or opacity breath on the slider track or thumb
+- **Behaviour:** Continuous, indefinite loop
+- **Constraint:** Must not be distracting; amplitude/intensity should be low. Respects `prefers-reduced-motion` (stops animating if motion is reduced).
+
+### Accessibility
+
+- Native range input provides keyboard navigation, ARIA role, and value announcement for free
+- Stop name label updates on change (visible + `aria-live` region or `aria-valuetext`)
+- Touch target minimum 44px height
+- Fixed position does not obscure content scroll (stays in corner)
+
+---
+
+## Integration Points
+
+- `App.tsx` — add `WhimsyProvider` wrapper; no other changes to overlay/modal state
+- `ProjectsSection.tsx` — largest change; sticky parallax pattern replaced by grid when `parallax: false`. Grid should match the responsive card layout (mobile-first, alternating left/right on desktop).
+- `ParticleField.tsx` — minimal change; conditional render on `particles` flag
+- `ProjectModal.tsx` — conditional animation; simpler transition when `growFromCard: false`
+- `ProjectCard.tsx` — conditional image placeholder style on `boringImages` flag
+
+---
+
+## Data Model Changes
+
+None. No new types beyond `WhimsyLevel` and `WhimsyConfig` (both local to `WhimsyContext.tsx`). No backend, no persistence.
+
+---
+
+## Business Rules
+
+- Resets to Stop 0 (*Curiouser*) on every page load — no persistence
+- All three stops retain the full color palette, gothic typography, and dark theme
+- `prefers-reduced-motion` behaviour is unchanged and layered on top of whimsy (motion-sensitive users get reduced motion at any stop)
+- Image placeholder at Stop 2 is a stub — grey/desaturated gradient box. Final image treatment deferred.
+
+---
+
+## Out of Scope
+
+- Persistent whimsy preference (localStorage / cookies)
+- More than 3 stops
+- Real images or AI-generated "strangeified" corporate stock photos
+- Changes to color palette, typography, or dark theme at any stop
+- New visual elements planned for future (not yet defined)
+
+---
+
+## Open Questions
+
+None — all decisions made.
+
+---
+
+## Deferred
+
+- Final image treatment for Stop 2 (*Quarterly Review*) — what the "boring corporate" image looks like beyond the grey gradient stub.

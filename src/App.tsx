@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { FaEnvelope } from 'react-icons/fa';
-import type { Project } from '@/features/projects/types';
-import { Hero } from '@/features/hero';
-import { ProjectsSection, ProjectModal } from '@/features/projects';
-import { AboutPanel } from '@/features/about';
-import { ContactPanel } from '@/features/contact';
-import { Fab, SlidePanel } from '@/components';
+import { Hero } from '@/components/core/Hero';
+import { ProjectsSection } from '@/components/projects/ProjectsSection';
+import { ProjectModal } from '@/components/projects/ProjectModal';
+import { AboutPanel } from '@/components/about/AboutPanel';
+import { ContactPanel } from '@/components/about/ContactPanel';
+import { Fab } from '@/components/core/Fab';
+import { SlidePanel } from '@/components/core/SlidePanel';
+import { WhimsyProvider } from '@/components/whimsy/WhimsyContext';
+import { WhimsySlider } from '@/components/whimsy/WhimsySlider';
+import type { Project } from '@/components/projects/types';
 
 const App = () => {
   // Overlay state
@@ -16,7 +20,6 @@ const App = () => {
 
   // Handlers
   const handleProjectClick = (project: Project, rect: DOMRect) => {
-    // Calculate card center from bounding rect
     const cardCenterX = rect.left + rect.width / 2;
     const cardCenterY = rect.top + rect.height / 2;
     setCardOrigin({ x: cardCenterX, y: cardCenterY });
@@ -60,10 +63,11 @@ const App = () => {
   }, [selectedProject, panelOpen]);
 
   return (
-    <>
+    <WhimsyProvider>
       <a href="#main-content" className="skip-link">
         Skip to main content
       </a>
+      <WhimsySlider />
       <main id="main-content" className="bg-abyss min-h-screen">
         <Hero />
         <ProjectsSection onProjectClick={handleProjectClick} />
@@ -92,7 +96,7 @@ const App = () => {
           </SlidePanel>
         )}
       </AnimatePresence>
-    </>
+    </WhimsyProvider>
   );
 };
 

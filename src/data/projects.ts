@@ -1,4 +1,4 @@
-import type { Project } from '@/features/projects/types.ts';
+import type { Project } from '@/components/projects/types';
 
 export const projects: Project[] = [
   {
