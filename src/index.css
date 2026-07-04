@@ -45,6 +45,11 @@
   --color-teal: #3b8a75;
   --color-teal-light: #5cb49a;
 
+  /* Boring-state gradient: neutral grey for stop-0 fallbacks */
+  --color-boring-dark: #1f2937;
+  --color-boring: #374151;
+  --color-boring-light: #4b5563;
+
   /* Surface colors */
   --color-surface-dim: rgba(61, 43, 90, 0.3);
   --color-surface: rgba(61, 43, 90, 0.5);

@@ -14,7 +14,7 @@ const AUTO_COLLAPSE_DELAY_MS = 3000;
 const WhimsySlider = () => {
   const { level, setLevel } = useWhimsy();
   const [expanded, setExpanded] = useState(true);
-  const collapseTimer = useRef<ReturnType<typeof setTimeout>>();
+  const collapseTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const scheduleCollapse = useCallback(() => {
     clearTimeout(collapseTimer.current);

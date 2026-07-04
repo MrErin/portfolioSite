@@ -3,6 +3,8 @@ export interface Project {
   name: string;
   description: string;
   techStack: string[];
+  imageUrl?: string;
+  boringImageUrl?: string;
   demoUrl?: string;
   repoUrl: string;
 }

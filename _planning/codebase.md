@@ -35,17 +35,26 @@ src/
 │   ├── projects/
 │   │   ├── animationConfig.ts # PARALLAX_CONFIG, SECTION_HEIGHT_VH, scroll window calculators
 │   │   ├── ParallaxCard.tsx   # Wrapper with scroll-linked parallax transforms (PARALLAX_CONFIG), forwards onProjectClick
-│   │   ├── ProjectCard.tsx    # Card with gradient placeholder (swaps to grey on config.boringImages), tech badges, purple glow on hover, clickable with rect capture
-│   │   ├── ProjectModal.tsx   # Dialog with grow-from-card animation, focus-trap-react, close btn, links, demo placeholder
+│   │   ├── ProjectCard.tsx    # Card with project image (or boring image at stop 0) or gradient fallback, tech badges, purple glow on hover, clickable with rect capture
+│   │   ├── ProjectModal.tsx   # Dialog with grow-from-card animation, focus-trap-react, close btn, image header (h-64, or boring image at stop 0) or gradient fallback, links, demo placeholder
 │   │   ├── ProjectsSection.tsx# 3 render modes: sticky parallax (Stop 2), grid+particles (Stops 0–1), vertical stack (reduced motion); inline useScroll
-│   │   └── types.ts          # Project interface
+│   │   └── types.ts          # Project interface (with optional imageUrl, optional boringImageUrl)
 │   └── whimsy/
 │       ├── WhimsyContext.tsx  # Context + provider, 3-stop level model (WhimsyLevel → WhimsyConfig flags)
 │       └── WhimsySlider.tsx   # Fixed native range input, 3 stops, safe-area-aware positioning
 └── data/
-    └── projects.ts            # 4 mock projects (themed names)
+    └── projects.ts            # 5 mock projects (themed names)
 └── assets/
-    └── herosilhouette.svg     # Potrace-traced underground earth/roots/grass silhouette (2064×437 viewBox)
+    ├── herosilhouette.svg     # Potrace-traced underground earth/roots/grass silhouette (2064×437 viewBox)
+    ├── frame1.svg             # (Unused) Victorian looking glass frame — scrapped, kept in case of future reuse
+    └── frame2.svg             # (Unused) Victorian looking glass frame — scrapped, kept in case of future reuse
+public/
+└── projectImages/            # Project thumbnail images served at root path (Vite public/)
+    ├── unfamiliar.webp
+    ├── unfamiliarBoring.webp
+    ├── singlePlayerCoOp.webp
+    ├── foodMap.webp
+    └── annotationExtractor.webp
 ```
 
 ## Tailwind Theme
@@ -81,7 +90,9 @@ CSS-first config via `@theme` block in `src/index.css`. Key tokens:
 - **Purple glow hover:** shadow-glow-purple on cards, FAB, and modal links
 - **Responsive:** Mobile-first with Tailwind breakpoints (sm, md, lg)
 - **Particles (Stops 1–2):** CSS float animation in Hero and ProjectsSection, 60 particles per instance, disabled by prefers-reduced-motion or config.particles
-- **Hero ground silhouette (Stops 1–2):** SVG silhouette at the bottom of the hero viewport, hidden at stop 0 (boringImages mode), decorative-only (aria-hidden, pointer-events-none)
+- **Hero ground silhouette (Stops 1–2):** SVG silhouette at the bottom of the hero viewport, hidden at stop 0 (boringImages true), decorative-only (aria-hidden, pointer-events-none)
+- **Project images:** Optional `imageUrl` and `boringImageUrl` fields on Project. Served from `public/projectImages/` via Vite public/. At stop 0, boring image (or grey gradient fallback) shows. At stops 1–2, regular image (or purple gradient fallback) shows. `object-cover object-center` for responsive cropping.
+- **Modal image header:** h-64 (256px) with object-cover. Same boring/regular image logic as cards.
 
 ## External Integrations
 

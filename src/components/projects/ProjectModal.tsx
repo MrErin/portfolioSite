@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { FocusTrap } from 'focus-trap-react';
@@ -16,6 +17,14 @@ interface ProjectModalProps {
 
 const ProjectModal = ({ project, onClose, cardOrigin }: ProjectModalProps) => {
   const { config } = useWhimsy();
+  const [hasImageError, setHasImageError] = useState(false);
+
+  const activeImageUrl = config.boringImages ? project.boringImageUrl : project.imageUrl;
+  const showImage = activeImageUrl && !hasImageError;
+
+  const headerGradientClass = config.boringImages
+    ? 'bg-gradient-to-br from-boring-dark via-boring to-boring-light'
+    : 'bg-gradient-to-br from-hollow via-shade to-dusk';
 
   // Calculate offset from viewport center for grow-from-card animation
   const viewportCenterX = typeof window !== 'undefined' ? window.innerWidth / 2 : 0;
@@ -65,10 +74,22 @@ const ProjectModal = ({ project, onClose, cardOrigin }: ProjectModalProps) => {
         >
           <CloseButton onClick={onClose} ariaLabel="Close modal" />
 
-          <div
-            className="h-32 bg-gradient-to-br from-hollow via-shade to-dusk rounded-t-lg"
-            aria-hidden="true"
-          />
+          <div className="relative h-92 overflow-hidden rounded-t-lg">
+            {showImage && (
+              <img
+                src={activeImageUrl}
+                alt={project.name}
+                className="object-cover object-center w-full h-full rounded-t-lg"
+                onError={() => setHasImageError(true)}
+              />
+            )}
+            {!showImage && (
+              <div
+                className={`absolute inset-0 ${headerGradientClass} rounded-t-lg`}
+                aria-hidden="true"
+              />
+            )}
+          </div>
 
           <div className="p-6 md:p-8">
             <h2 className="font-display text-gold text-3xl mb-4">{project.name}</h2>

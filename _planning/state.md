@@ -1,7 +1,7 @@
 # Project State
 
 ## Current Phase
-Phase: 2 (Hero ground silhouette)
+Phase: 3 (Project images & looking glass frames)
 Status: complete
 Last Updated: 2026-07-04
 
@@ -16,6 +16,9 @@ Last Updated: 2026-07-04
 | 2026-07-04 | Phase 1 review complete. Fixed reduced-motion gap, cleaned up `React.ChangeEvent` import, updated stale stop references in `codebase.md`, recorded collapse/expand decision. Phase accepted. |
 | 2026-07-04 | Phase 2 build complete. Added ground silhouette SVG to hero bottom, wired whimsy behavior (visible stops 1–2, hidden at stop 0 via boringImages flag), added overflow-hidden, updated codebase.md. |
 | 2026-07-04 | Phase 2 review + UA testing complete. Fixed codebase.md stop-number typo. All checks passed, no issues. Phase accepted. |
+| 2026-07-04 | Phase 3 build complete. Added `imageUrl` and `boringImageUrl` to Project interface. ProjectCard and ProjectModal show boring image (or grey gradient) at stop 0, regular image (or purple gradient) at stops 1–2. `decorativeOverlays` rename reverted back to `boringImages`. SVG frame overlays attempted then scrapped — aspect ratio mismatch with card dimensions couldn't be resolved. Modal header raised to h-64. React 19 `useRef` fix in WhimsySlider. Updated codebase.md. |
+| 2026-07-04 | Phase 3 code review complete. Found: missing leading slash in boringImageUrl (projects.ts:10), modal gradient fallback always purple (inconsistency with card grey at stop 0), codebase.md file listing stale (.png vs .webp), hardcoded Tailwind grey antipattern. Status set to ua-testing. |
+| 2026-07-04 | Phase 3 review fixes applied. Fixed leading slash in boringImageUrl, mirrored card gradient logic in modal, updated codebase.md file listing, added semantic boring-* tokens to replace hardcoded grey classes. UA testing accepted. Phase complete. |
 
 ## Blockers
 None.
