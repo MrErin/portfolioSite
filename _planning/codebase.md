@@ -29,7 +29,7 @@ src/
 │   ├── core/
 │   │   ├── CloseButton.tsx    # Shared close button (X icon, focus-visible ring)
 │   │   ├── Fab.tsx            # Generic floating action button (icon, label, onClick props)
-│   │   ├── Hero.tsx           # Full-viewport hero with gradient bg + ParticleField
+│   │   ├── Hero.tsx           # Full-viewport hero with gradient bg, ground silhouette (visible stops 1–2, hidden at stop 0), + ParticleField
 │   │   ├── ParticleField.tsx  # Decorative floating dots (hidden by prefers-reduced-motion or config.particles)
 │   │   └── SlidePanel.tsx     # Reusable slide-in overlay with focus-trap-react (backdrop + animation + close)
 │   ├── projects/
@@ -44,6 +44,8 @@ src/
 │       └── WhimsySlider.tsx   # Fixed native range input, 3 stops, safe-area-aware positioning
 └── data/
     └── projects.ts            # 4 mock projects (themed names)
+└── assets/
+    └── herosilhouette.svg     # Potrace-traced underground earth/roots/grass silhouette (2064×437 viewBox)
 ```
 
 ## Tailwind Theme
@@ -79,6 +81,7 @@ CSS-first config via `@theme` block in `src/index.css`. Key tokens:
 - **Purple glow hover:** shadow-glow-purple on cards, FAB, and modal links
 - **Responsive:** Mobile-first with Tailwind breakpoints (sm, md, lg)
 - **Particles (Stops 1–2):** CSS float animation in Hero and ProjectsSection, 60 particles per instance, disabled by prefers-reduced-motion or config.particles
+- **Hero ground silhouette (Stops 1–2):** SVG silhouette at the bottom of the hero viewport, hidden at stop 0 (boringImages mode), decorative-only (aria-hidden, pointer-events-none)
 
 ## External Integrations
 

@@ -36,7 +36,7 @@ const ProjectsSection = ({ onProjectClick }: ProjectsSectionProps) => {
   // Reduced motion fallback: simple vertical stack
   if (prefersReducedMotion) {
     return (
-      <section aria-label="Projects" className="min-h-screen bg-deep py-20 px-4">
+      <section aria-label="Projects" className="relative min-h-screen bg-deep py-20 px-4">
         <div className="max-w-4xl mx-auto">
           <h2 className="font-heading text-purple-light text-4xl mb-12 text-center">Projects</h2>
           <div className="flex flex-col gap-6">
