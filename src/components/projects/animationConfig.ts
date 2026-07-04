@@ -22,13 +22,39 @@ const STICKY_END = SECTION_HEIGHT_VH / TOTAL_SCROLL_VH; // ~0.75
  * 0.3 gives each card ~90vh of scroll with brief crossfade overlap,
  * so cards appear one at a time rather than piling up.
  */
-const WINDOW_RATIO = 0.3;
+const WINDOW_RATIO = 0.5;
 
 /**
  * Small buffer inside the sticky range so cards don't start/end
  * at the exact moment the sticky pins/releases.
  */
 const INNER_PAD_RATIO = 0.01;
+
+/**
+ * Shared scroll window calculator. Parameterized by window ratio
+ * so cards and objects can use the same math at different speeds.
+ */
+const getScrollWindowForRatio = (
+  index: number,
+  total: number,
+  ratio: number
+): { start: number; end: number } => {
+  const stickyRange = STICKY_END - STICKY_START;
+  const innerPad = stickyRange * INNER_PAD_RATIO;
+  const rangeStart = STICKY_START + innerPad;
+  const rangeEnd = STICKY_END - innerPad;
+  const windowSize = stickyRange * ratio;
+
+  if (total <= 1) {
+    return { start: rangeStart, end: rangeEnd };
+  }
+
+  const stagger = (rangeEnd - rangeStart - windowSize) / (total - 1);
+  const start = rangeStart + index * stagger;
+  const end = start + windowSize;
+
+  return { start, end };
+};
 
 /**
  * Get the scroll window (start/end range) for a specific card.
@@ -39,26 +65,18 @@ const INNER_PAD_RATIO = 0.01;
  * @param totalCards - Total number of cards
  * @returns Object with start and end values in [0, 1] range
  */
-export const getCardScrollWindow = (
-  index: number,
-  totalCards: number
-): { start: number; end: number } => {
-  const stickyRange = STICKY_END - STICKY_START;
-  const innerPad = stickyRange * INNER_PAD_RATIO;
-  const rangeStart = STICKY_START + innerPad;
-  const rangeEnd = STICKY_END - innerPad;
-  const windowSize = stickyRange * WINDOW_RATIO;
+export const getCardScrollWindow = (index: number, totalCards: number) =>
+  getScrollWindowForRatio(index, totalCards, WINDOW_RATIO);
 
-  if (totalCards <= 1) {
-    return { start: rangeStart, end: rangeEnd };
-  }
+/** Shared opacity fade calculator from scroll window bounds. */
+const getOpacityRange = (start: number, end: number): { input: number[]; output: number[] } => {
+  const windowLength = end - start;
+  const fadeMargin = windowLength * 0.15;
 
-  // Distribute cards evenly within the padded sticky range
-  const stagger = (rangeEnd - rangeStart - windowSize) / (totalCards - 1);
-  const start = rangeStart + index * stagger;
-  const end = start + windowSize;
-
-  return { start, end };
+  return {
+    input: [start, start + fadeMargin, end - fadeMargin, end],
+    output: [0, 1, 1, 0],
+  };
 };
 
 /**
@@ -71,18 +89,9 @@ export const getCardScrollWindow = (
  *
  * Uses a fade margin (15% of window size) to create smooth fade in/out.
  */
-export const getCardOpacityRange = (
-  index: number,
-  totalCards: number
-): { input: number[]; output: number[] } => {
+export const getCardOpacityRange = (index: number, totalCards: number) => {
   const { start, end } = getCardScrollWindow(index, totalCards);
-  const windowLength = end - start;
-  const fadeMargin = windowLength * 0.15;
-
-  return {
-    input: [start, start + fadeMargin, end - fadeMargin, end],
-    output: [0, 1, 1, 0],
-  };
+  return getOpacityRange(start, end);
 };
 
 /**
@@ -102,4 +111,20 @@ export const PARALLAX_CONFIG = {
    * Callers should negate output for odd-indexed cards.
    */
   translateXOutput: [-120, 120],
+};
+
+/**
+ * Scroll window size for falling objects — shorter than cards so objects
+ * cycle through faster, keeping 3–5 visible at any scroll position.
+ */
+const OBJECT_WINDOW_RATIO = 0.18;
+
+/** Get the scroll window for a falling object slot. */
+export const getObjectScrollWindow = (index: number, totalObjects: number) =>
+  getScrollWindowForRatio(index, totalObjects, OBJECT_WINDOW_RATIO);
+
+/** Get the opacity fade range for a falling object slot. */
+export const getObjectOpacityRange = (index: number, totalObjects: number) => {
+  const { start, end } = getObjectScrollWindow(index, totalObjects);
+  return getOpacityRange(start, end);
 };

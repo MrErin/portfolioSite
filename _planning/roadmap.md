@@ -10,7 +10,7 @@ Created: 2026-07-03
 - [x] Phase 1: Whimsy slider restyle
 - [x] Phase 2: Hero ground silhouette
 - [x] Phase 3: Project images & looking glass frames
-- [ ] Phase 4: Falling objects
+- [x] Phase 4: Falling objects
 - [ ] Phase 5: Profile photo, demo button & cleanup
 
 ## Phase intent notes (written at init)

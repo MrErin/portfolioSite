@@ -6,6 +6,7 @@ import { useWhimsy } from '@/components/whimsy/WhimsyContext';
 import { SECTION_HEIGHT_VH } from './animationConfig';
 import { ParallaxCard } from './ParallaxCard';
 import { ProjectCard } from './ProjectCard';
+import { FallingObjects } from './FallingObjects';
 import type { Project } from './types';
 
 interface ProjectsSectionProps {
@@ -53,6 +54,7 @@ const ProjectsSection = ({ onProjectClick }: ProjectsSectionProps) => {
     return (
       <section aria-label="Projects" className="relative min-h-screen bg-deep py-20 px-4">
         <ParticleField />
+        {config.particles && <FallingObjects mode="static" />}
         <div className="relative z-10 max-w-4xl mx-auto">
           <h2 className="font-heading text-purple-light text-4xl mb-12 text-center">Projects</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -71,12 +73,12 @@ const ProjectsSection = ({ onProjectClick }: ProjectsSectionProps) => {
       ref={ref}
       aria-label="Projects"
       // Tall section provides scroll runway for parallax effect
-      // Reduced height on mobile for shorter scroll distance
       className="relative bg-deep"
       style={{ height: `${SECTION_HEIGHT_VH}vh` }}
     >
       {/* Sticky container stays pinned while scrolling through the tall section */}
       <div className="sticky top-0 h-screen overflow-hidden flex items-center justify-center">
+        <FallingObjects scrollYProgress={scrollYProgress} mode="falling" />
         <ParticleField />
 
         {/* Heading stays visible throughout the scroll */}
