@@ -122,9 +122,3 @@ const OBJECT_WINDOW_RATIO = 0.18;
 /** Get the scroll window for a falling object slot. */
 export const getObjectScrollWindow = (index: number, totalObjects: number) =>
   getScrollWindowForRatio(index, totalObjects, OBJECT_WINDOW_RATIO);
-
-/** Get the opacity fade range for a falling object slot. */
-export const getObjectOpacityRange = (index: number, totalObjects: number) => {
-  const { start, end } = getObjectScrollWindow(index, totalObjects);
-  return getOpacityRange(start, end);
-};

@@ -1,24 +1,36 @@
+import { useState } from 'react';
+import headshotUrl from '@/assets/headshot.jpeg';
+
+const FALLBACK_GRADIENT =
+  'w-32 h-32 rounded-full bg-gradient-to-br from-purple-dark to-shade border-2 border-border mx-auto mb-6';
+
 const AboutPanel = () => {
-  const skills = ['React', 'TypeScript', 'Node.js', 'Rust', 'Go', 'Tailwind CSS', 'Framer Motion'];
+  const [hasImageError, setHasImageError] = useState(false);
+  const skills = ['React', 'TypeScript', 'Python', 'SQL', 'GIS', 'Data Analysis', 'AI Tooling'];
 
   return (
     <section aria-label="About">
       <h2 className="font-heading text-gold text-2xl mb-6">About</h2>
 
-      {/* Photo placeholder */}
-      <div
-        className="w-32 h-32 rounded-full bg-gradient-to-br from-purple-dark to-shade border-2 border-border mx-auto mb-6"
-        role="img"
-        aria-label="Profile photo placeholder"
-      />
+      {hasImageError ? (
+        <div className={FALLBACK_GRADIENT} role="img" aria-label="Profile photo unavailable" />
+      ) : (
+        <img
+          src={headshotUrl}
+          alt="Developer profile photo"
+          className="w-32 h-32 rounded-full object-cover object-center border-2 border-border mx-auto mb-6"
+          onError={() => setHasImageError(true)}
+        />
+      )}
 
-      {/* Bio */}
+      <p className="font-body text-text-secondary mb-6">
+        Full-stack developer who especially enjoys working with maps and data. Currently exploring
+        AI-assisted development. Generally up for a weird conversation. Cares a <em>lot</em> about helping people.
+      </p>
       <p className="font-body text-text-secondary text-center mb-6">
-        A curious developer exploring the depths of modern web development. Building tools that
-        bridge the gap between imagination and reality.
+        Kind of bonkers, but professional about it.
       </p>
 
-      {/* Skills section */}
       <div>
         <h3 className="font-heading text-text-primary text-lg mb-3">Skills</h3>
         <div className="flex flex-wrap gap-2">

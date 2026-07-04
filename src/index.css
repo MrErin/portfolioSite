@@ -565,4 +565,24 @@ button {
   .falling-object-glow {
     animation: none;
   }
+
+  .animate-scroll-bounce {
+    animation: none;
+  }
+}
+
+/* ====== Hero scroll arrow bounce ====== */
+
+@keyframes scroll-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+}
+
+.animate-scroll-bounce {
+  animation: scroll-bounce 2s ease-in-out infinite;
 }

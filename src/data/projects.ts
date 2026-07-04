@@ -30,6 +30,7 @@ export const projects: Project[] = [
     imageUrl: '/projectImages/foodMap.webp',
     boringImageUrl: '/projectImages/foodMapBoring.webp',
     repoUrl: 'https://github.com/MrErin/prideFoodMap',
+    demoUrl: 'https://www.chattanoogapride.com/foodcoalition',
   },
   {
     id: 'annotationExtractor',

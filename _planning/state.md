@@ -1,7 +1,7 @@
 # Project State
 
 ## Current Phase
-Phase: 4 (Falling objects)
+Phase: 5 (Profile photo, demo button & cleanup)
 Status: complete
 Last Updated: 2026-07-04
 
@@ -21,6 +21,8 @@ Last Updated: 2026-07-04
 | 2026-07-04 | Phase 3 review fixes applied. Fixed leading slash in boringImageUrl, mirrored card gradient logic in modal, updated codebase.md file listing, added semantic boring-* tokens to replace hardcoded grey classes. UA testing accepted. Phase complete. |
 | 2026-07-04 | Phase 4 build complete. Created FallingObjects.tsx with 6 Alice SVG silhouettes. Falling mode (stop 2): 18 scroll-linked slots with edge-biased positioning behind cards. Static mode (stop 1): 6 fixed slots with random sequential glow. CSS filter colorizes black silhouettes. Hidden at stop 0, reduced motion, and below md. Refactored animationConfig.ts to share scroll window math between cards (0.30 ratio) and objects (0.18 ratio). Updated codebase.md. |
 | 2026-07-04 | Phase 4 review + UA testing complete. Wide horizontal distribution, FALLING_SLOT_COUNT=36, and unused getObjectOpacityRange export all confirmed as intentional. No blockers. Phase accepted. |
+| 2026-07-04 | Phase 5 build complete. Replaced profile photo placeholder with headshot.jpeg + error fallback. Replaced demo placeholder + duplicate Live Demo link with conditional whimsy-styled button (3 visual states). Added cave floor SVG to Projects section (stop 1 static below grid, stop 2 static sibling after section). Switched grid to flexbox for centered odd last row, increased heading spacing. Hero shrinks to 30vh at stop 0 with dynamic title. Scroll bounce arrow added to top of Projects parallax section (stop 2). Removed unused `getObjectOpacityRange` export. ContactPanel email reveal + real links added out of plan. Updated codebase.md. |
+| 2026-07-04 | Phase 5 review + UA testing complete. Fixed duplicate react-icons import in ContactPanel. Accepted: inline filter style on arrow, double heading gap, static cave floor, arrow in ProjectsSection. Fixed codebase.md inaccuracies. Recorded decisions 4–7. Phase accepted. |
 
 ## Blockers
 None.

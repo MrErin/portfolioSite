@@ -73,7 +73,7 @@ const App = () => {
         <ProjectsSection onProjectClick={handleProjectClick} />
       </main>
 
-      <div className="fixed bottom-6 right-6 z-40">
+      <div className="fixed bottom-6 md:bottom-32 right-6 z-40">
         <Fab icon={<FaEnvelope />} label="Open about & contact" onClick={handleOpenPanel} />
       </div>
 
