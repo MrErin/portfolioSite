@@ -7,7 +7,7 @@ Created: 2026-07-03
 
 ## Phases
 
-- [ ] Phase 1: Whimsy slider restyle
+- [x] Phase 1: Whimsy slider restyle
 - [ ] Phase 2: Hero ground silhouette
 - [ ] Phase 3: Project images & looking glass frames
 - [ ] Phase 4: Falling objects
@@ -15,7 +15,7 @@ Created: 2026-07-03
 
 ## Phase intent notes (written at init)
 
-**Phase 1 (Whimsy slider restyle):** Restyle the slider with three visual states (ornate Victorian at stop 0, toned down at stop 1, clean minimal at stop 2). Remove pulse glow and broken tick marks. Pure CSS, no image assets needed. Done = slider looks intentionally themed at all three stops and passes WCAG contrast.
+**Phase 1 (Whimsy slider restyle):** Restyle the slider with three visual states (clean minimal at stop 0, toned down at stop 1, ornate Victorian at stop 2). Polarity reversed so left=less, right=more whimsy. Remove pulse glow and broken tick marks. Pure CSS, no image assets needed. Done = slider looks intentionally themed at all three stops and passes WCAG contrast.
 
 **Phase 2 (Hero ground silhouette):** Integrate the underground earth/roots SVG silhouette at the bottom of the hero viewport. Position and scale responsively. Evaluate whimsy behavior (visible at all stops vs stops 0-1 only). Done = hero establishes "underground" atmosphere, silhouette scales cleanly across viewports.
 

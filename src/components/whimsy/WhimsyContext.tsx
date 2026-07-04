@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, type ReactNode } from 'react';
 
-/** Discrete whimsy stops: 0 = max whimsy, 2 = min whimsy. */
+/** Discrete whimsy stops: 0 = min whimsy, 2 = max whimsy. */
 type WhimsyLevel = 0 | 1 | 2;
 
 /** Feature flags resolved from the current whimsy level. */
@@ -13,9 +13,9 @@ interface WhimsyConfig {
 
 /** Maps each whimsy stop to its feature flags — single source of truth. */
 const WHIMSY_LEVELS: Record<WhimsyLevel, WhimsyConfig> = {
-  0: { parallax: true, particles: true, growFromCard: true, boringImages: false },
+  0: { parallax: false, particles: false, growFromCard: false, boringImages: true },
   1: { parallax: false, particles: true, growFromCard: true, boringImages: false },
-  2: { parallax: false, particles: false, growFromCard: false, boringImages: true },
+  2: { parallax: true, particles: true, growFromCard: true, boringImages: false },
 };
 
 interface WhimsyContextValue {
@@ -27,7 +27,7 @@ interface WhimsyContextValue {
 const WhimsyContext = createContext<WhimsyContextValue | null>(null);
 
 const WhimsyProvider = ({ children }: { children: ReactNode }) => {
-  const [level, setLevel] = useState<WhimsyLevel>(0);
+  const [level, setLevel] = useState<WhimsyLevel>(2);
 
   const config = WHIMSY_LEVELS[level];
 

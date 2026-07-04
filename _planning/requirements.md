@@ -56,10 +56,10 @@ Visual polish pass covering three areas:
 
 **Remove:** Oversized pulse glow, broken-looking tick mark dashes.
 
-**Visual states by stop:**
-- **Stop 0 (Curiouser and Curiouser):** Ornate Victorian styling. Gothic fonts (Cinzel) on labels. Styled thumb — dark gold/metallic gradient, subtle glow, decorative borders. Decorative track/rail with inset depth. Feels like a piece of the world.
+**Visual states by stop (left-to-right = less-to-more whimsy):**
+- **Stop 0 (Quarterly Review):** Clean minimal. Simple thumb, plain track, straightforward labels. Standard polished UI control.
 - **Stop 1 (Sensibly Strange):** Toned-down version. Still styled but less ornate — simpler thumb, less glow, cleaner track.
-- **Stop 2 (Quarterly Review):** Clean minimal. Simple thumb, plain track, straightforward labels. Standard polished UI control.
+- **Stop 2 (Curiouser and Curiouser):** Ornate Victorian styling. Gothic fonts (Cinzel) on labels. Styled thumb — dark gold/metallic gradient, subtle glow, decorative borders. Decorative track/rail with inset depth. Feels like a piece of the world.
 
 **Implementation:** Pure CSS (gradients, box-shadow, borders on `::-webkit-slider-thumb` / `::-moz-range-thumb` and track pseudos). No image assets needed. Uses existing theme tokens (gold, purple, surface colors).
 
@@ -129,7 +129,7 @@ Most visual details captured in image inventory and slider restyle sections abov
 - No real project data — keep mock Alice-themed projects
 - No image optimization pipeline (lazy loading, responsive `srcset`, WebP conversion)
 - No animation on looking glass frame overlays (static overlay)
-- No persistent whimsy preference (still resets to stop 0 on load)
+- No persistent whimsy preference (still resets to max whimsy on load)
 - No font changes based on whimsy level
 - No color palette or dark theme changes based on whimsy level
 - No new sections or layout changes beyond what's described
