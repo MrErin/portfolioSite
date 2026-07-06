@@ -10,7 +10,7 @@ import watchUrl from '@/assets/watch.svg';
 
 const OBJECT_SOURCES = [armchairUrl, bookUrl, cardUrl, cupUrl, keyUrl, watchUrl] as const;
 
-const FALLING_SLOT_COUNT = 36;
+const FALLING_SLOT_COUNT = 24;
 const STATIC_SLOT_COUNT = 6;
 const GLOW_INTERVAL_MS = 3500;
 const BASE_SIZES = ['w-48', 'w-56', 'w-64', 'w-80'] as const;
@@ -31,7 +31,7 @@ const generateSlots = (count: number, useUniqueSources: boolean): ObjectSlot[] =
     // Static mode: distribute evenly on left/right sides, no overlap
     const sources = [...OBJECT_SOURCES].sort(() => Math.random() - 0.5);
     const perSide = Math.ceil(count / 2);
-    const bandHeight = 80 / perSide;
+    const bandHeight = 55 / perSide;
 
     return Array.from({ length: count }, (_, i) => {
       const isLeft = i % 2 === 0;
@@ -86,7 +86,7 @@ const FallingObject = ({
     [scrollStart, scrollStart + fadeMargin, scrollEnd - fadeMargin, scrollEnd],
     [0, 0.2, 0.2, 0]
   );
-  const translateY = useTransform(scrollYProgress, [scrollStart, scrollEnd], [1400, -2400]);
+  const translateY = useTransform(scrollYProgress, [scrollStart, scrollEnd], [1200, -1200]);
   const scale = useTransform(scrollYProgress, [scrollStart, scrollEnd], [0.85, 1.0]);
 
   return (
@@ -102,6 +102,7 @@ const FallingObject = ({
         mode === 'falling'
           ? {
               left: slot.left,
+              top: slot.top,
               rotate: slot.rotation,
               y: translateY,
               scale,

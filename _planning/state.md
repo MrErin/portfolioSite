@@ -1,8 +1,8 @@
 # Project State
 
 ## Current Phase
-Phase: 5 (Profile photo, demo button & cleanup)
-Status: complete
+Phase: 6 (Cave floor fixes)
+Status: review
 Last Updated: 2026-07-04
 
 ## Requirements Location
@@ -23,6 +23,7 @@ Last Updated: 2026-07-04
 | 2026-07-04 | Phase 4 review + UA testing complete. Wide horizontal distribution, FALLING_SLOT_COUNT=36, and unused getObjectOpacityRange export all confirmed as intentional. No blockers. Phase accepted. |
 | 2026-07-04 | Phase 5 build complete. Replaced profile photo placeholder with headshot.jpeg + error fallback. Replaced demo placeholder + duplicate Live Demo link with conditional whimsy-styled button (3 visual states). Added cave floor SVG to Projects section (stop 1 static below grid, stop 2 static sibling after section). Switched grid to flexbox for centered odd last row, increased heading spacing. Hero shrinks to 30vh at stop 0 with dynamic title. Scroll bounce arrow added to top of Projects parallax section (stop 2). Removed unused `getObjectOpacityRange` export. ContactPanel email reveal + real links added out of plan. Updated codebase.md. |
 | 2026-07-04 | Phase 5 review + UA testing complete. Fixed duplicate react-icons import in ContactPanel. Accepted: inline filter style on arrow, double heading gap, static cave floor, arrow in ProjectsSection. Fixed codebase.md inaccuracies. Recorded decisions 4–7. Phase accepted. |
+| 2026-07-04 | Phase 6 build complete. Cave floor: shared CSS constants (CAVE_FLOOR_DECORATIVE, CAVE_FLOOR_MASK), h-64 with object-cover/object-bottom for ~50% height reduction, mask-image top edge fade. Stop 1: edge-to-edge via -mx-4. Stop 2: moved inside sticky container with useTransform([0.78, 0.95]) scroll-in, eliminated dead scroll space, removed fragment wrapper. FallingObjects static vertical range reduced from 80% to 55%. Reversed decision #4. Updated codebase.md and decisions.md. |
 
 ## Blockers
 None.

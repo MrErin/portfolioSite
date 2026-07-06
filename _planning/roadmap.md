@@ -12,6 +12,7 @@ Created: 2026-07-03
 - [x] Phase 3: Project images & looking glass frames
 - [x] Phase 4: Falling objects
 - [x] Phase 5: Profile photo, demo button & cleanup
+- [~] Phase 6: Cave floor fixes (in review)
 
 ## Phase intent notes (written at init)
 

@@ -43,12 +43,13 @@ export const projects: Project[] = [
     repoUrl: 'https://github.com/MrErin/annotationExtractor',
   },
   {
-    id: 'red-queen-dashboard',
-    name: 'Red Queen Dashboard',
+    id: 'thisPage',
+    name: 'This Page',
     description:
-      'A real-time analytics dashboard with live data visualization. Features customizable widgets, dark mode, and export capabilities for reports.',
-    techStack: ['React', 'TypeScript', 'D3.js', 'WebSocket'],
-    demoUrl: 'https://redqueen.example.com',
-    repoUrl: 'https://github.com/user/red-queen-dashboard',
+      'This page was SO much fun to put together and also an enormous pain in the ass.',
+    techStack: ['React', 'TypeScript', 'Framer Motion', 'Grit'],
+    demoUrl: 'https://www.erinmeaker.com',
+    repoUrl: 'https://github.com/mrerin',
+    imageUrl: '/projectImages/watch.svg'
   },
 ];

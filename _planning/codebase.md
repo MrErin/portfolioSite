@@ -34,11 +34,11 @@ src/
 │   │   └── SlidePanel.tsx     # Reusable slide-in overlay with focus-trap-react (backdrop + animation + close)
 │   ├── projects/
 │   │   ├── animationConfig.ts # PARALLAX_CONFIG, SECTION_HEIGHT_VH, scroll window calculators (cards + falling objects)
-│   │   ├── FallingObjects.tsx # Background silhouettes: falling mode (stop 2, scroll-linked), static mode (stop 1, random glow). 6 Alice SVGs, slot-based, hidden below md
+│   │   ├── FallingObjects.tsx # Background silhouettes: falling mode (stop 2, scroll-linked), static mode (stop 1, random glow, vertical range capped at ~55% to avoid cave floor overlap). 6 Alice SVGs, slot-based, hidden below md
 │   │   ├── ParallaxCard.tsx   # Wrapper with scroll-linked parallax transforms (PARALLAX_CONFIG), forwards onProjectClick
 │   │   ├── ProjectCard.tsx    # Card with project image (or boring image at stop 0) or gradient fallback, tech badges, purple glow on hover, clickable with rect capture
 │   │   ├── ProjectModal.tsx   # Dialog with grow-from-card animation, focus-trap-react, close btn, image header (h-64, or boring image at stop 0) or gradient fallback, whimsy-styled demo button (conditional on demoUrl), repo link
-│   │   ├── ProjectsSection.tsx# 3 render modes: sticky parallax (Stop 2) + FallingObjects falling + scroll bounce arrow + cave floor static after section, flexbox grid+particles (Stops 0–1) + FallingObjects static + cave floor below grid, vertical stack (reduced motion); inline useScroll
+│   │   ├── ProjectsSection.tsx# 3 render modes: sticky parallax (Stop 2) + FallingObjects falling + scroll bounce arrow + cave floor scroll-in inside sticky container, flexbox grid+particles (Stops 0–1) + FallingObjects static + cave floor below grid (edge-to-edge), vertical stack (reduced motion); inline useScroll + useTransform
 │   │   └── types.ts          # Project interface (with optional imageUrl, optional boringImageUrl)
 │   └── whimsy/
 │       ├── WhimsyContext.tsx  # Context + provider, 3-stop level model (WhimsyLevel → WhimsyConfig flags)
@@ -109,7 +109,7 @@ CSS-first config via `@theme` block in `src/index.css`. Key tokens:
 - **Modal image header:** h-64 (256px) with object-cover. Same boring/regular image logic as cards.
 - **Profile photo:** `headshot.jpeg` with `object-cover object-center`, circular crop. Error fallback to gradient placeholder.
 - **Whimsy demo button:** Conditional `<a>` in ProjectModal (only when `project.demoUrl`). Three visual states keyed to whimsy level: stop 0 (clean, font-body, neutral), stop 1 (purple-themed, font-heading), stop 2 (ornate Victorian, gold, uppercase). `target="_blank" rel="noopener noreferrer"`.
-- **Cave floor SVG:** Decorative image at bottom of Projects section. Stop 1 (grid): static below grid. Stop 2 (parallax): scroll-linked fade-in (opacity 0→1 over scrollProgress 0.85–0.93) in sticky container. Hidden at stop 0 and reduced motion.
+- **Cave floor SVG:** Decorative image at bottom of Projects section. Stop 1 (grid): static below grid with edge-to-edge coverage (`-mx-4`), reduced height (`h-64`, ~50% of natural via `object-cover object-bottom`), soft top fade (`mask-image` gradient). Stop 2 (parallax): scroll-linked `useTransform([0.78, 0.95])` slides floor up from below inside sticky container, eliminating dead scroll space. Hidden at stop 0 and reduced motion. Shared CSS constants: `CAVE_FLOOR_DECORATIVE` (height/crop/accessibility), `CAVE_FLOOR_MASK` (top edge fade).
 - **Grid layout:** Flexbox with `flex-wrap justify-center` for centered odd last row. Cards `w-full md:w-[calc(50%-0.75rem)]`. Heading spacing `mb-20`.
 
 ## External Integrations

@@ -2,7 +2,7 @@
  * Section height in vh units. Exported so ProjectsSection stays in sync.
  * A taller section = more scroll runway for the parallax effect.
  */
-export const SECTION_HEIGHT_VH = 800;
+export const SECTION_HEIGHT_VH = 400;
 
 /**
  * With offset ['start end', 'end start'], scroll progress 0→1 spans
@@ -14,8 +14,8 @@ export const SECTION_HEIGHT_VH = 800;
  */
 const VIEWPORT_VH = 100;
 const TOTAL_SCROLL_VH = SECTION_HEIGHT_VH + VIEWPORT_VH;
-const STICKY_START = VIEWPORT_VH / TOTAL_SCROLL_VH; // ~0.25
-const STICKY_END = SECTION_HEIGHT_VH / TOTAL_SCROLL_VH; // ~0.75
+const STICKY_START = VIEWPORT_VH / TOTAL_SCROLL_VH; // ~0.143
+const STICKY_END = SECTION_HEIGHT_VH / TOTAL_SCROLL_VH; // ~0.857
 
 /**
  * Scroll window size for each card, as a fraction of the sticky range.
