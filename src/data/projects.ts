@@ -4,7 +4,7 @@ export const projects: Project[] = [
   {
     id: 'unfamiliar',
     name: 'Unfamiliar',
-    description: 'AI powered codebase exploration tool with gamified investigation missions',
+    description: 'AI powered codebase exploration tool that runs in the terminal. Privacy-first design analyzes a repository on your local machine and sends analysis data (not raw code) to the LLM you configure. The LLM structures mission chains and themes them, gamifying the process of learning a new codebase. Published on PyPi.',
     techStack: ['Python', 'Langchain/Langgraph', 'Textual'],
     imageUrl: '/projectImages/unfamiliar.webp',
     boringImageUrl: '/projectImages/unfamiliarBoring.webp',
@@ -15,7 +15,7 @@ export const projects: Project[] = [
     id: 'singlePlayerCoOp',
     name: 'Single Player Co-Op',
     description:
-      'A harness for AI-assisted development, providing guardrails, standards, and checkpoints to keep human hands on the wheel.',
+      'Harness for AI-assisted development, providing guardrails, standards, and checkpoints for human/AI collaboration.',
     techStack: ['AI Context Engineering'],
     imageUrl: '/projectImages/singlePlayerCoOp.webp',
     boringImageUrl: '/projectImages/singlePlayerCoOpBoring.webp',

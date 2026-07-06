@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
-import { motion, useMotionValue, useTransform, type MotionValue } from 'framer-motion';
-import { getObjectScrollWindow } from './animationConfig';
+import { motion, useMotionValue, useMotionValueEvent, type MotionValue } from 'framer-motion';
 import armchairUrl from '@/assets/armchair.svg';
 import bookUrl from '@/assets/book.svg';
 import cardUrl from '@/assets/card.svg';
 import cupUrl from '@/assets/cup.svg';
 import keyUrl from '@/assets/key.svg';
 import watchUrl from '@/assets/watch.svg';
+import { projects } from '@/data/projects';
+import { getObjectScrollWindow } from './animationConfig';
 
 const OBJECT_SOURCES = [armchairUrl, bookUrl, cardUrl, cupUrl, keyUrl, watchUrl] as const;
 
@@ -64,10 +65,30 @@ interface FallingObjectProps {
   mode: 'falling' | 'static';
 }
 
+/** Linear interpolation between two values based on normalized progress. */
+const lerp = (from: number, to: number, t: number): number => from + (to - from) * t;
+
 /**
- * Single falling object with its own scroll-linked transforms.
- * Hooks are unconditional per-instance (same pattern as ParallaxCard).
- * In static mode, transforms are computed but not applied to the style.
+ * 4-keyframe interpolation for opacity fade in/out.
+ * Maps normalized progress [0→1] through: 0 → peak → peak → 0
+ * with fade margins at 15% from each end.
+ */
+const computeOpacity = (t: number, peak: number): number => {
+  const fadeIn = 0.15;
+  const fadeOut = 0.85;
+  if (t <= 0 || t >= 1) return 0;
+  if (t < fadeIn) return (t / fadeIn) * peak;
+  if (t > fadeOut) return ((1 - t) / (1 - fadeOut)) * peak;
+  return peak;
+};
+
+/**
+ * Single falling object with manually-driven scroll transforms.
+ *
+ * Uses useMotionValueEvent + useMotionValue instead of useTransform to work
+ * around a Framer Motion v12 bug where many concurrent useTransform subscribers
+ * (72 = 24 objects × 3 transforms) to the same MotionValue partially fail to
+ * connect. useMotionValueEvent reliably fires for all instances.
  */
 const FallingObject = ({
   scrollYProgress,
@@ -77,47 +98,51 @@ const FallingObject = ({
   isGlowing,
   mode,
 }: FallingObjectProps) => {
-  const { start: scrollStart, end: scrollEnd } = getObjectScrollWindow(index, totalSlots);
-  const windowLength = scrollEnd - scrollStart;
-  const fadeMargin = windowLength * 0.15;
-
-  const scrollOpacity = useTransform(
-    scrollYProgress,
-    [scrollStart, scrollStart + fadeMargin, scrollEnd - fadeMargin, scrollEnd],
-    [0, 0.2, 0.2, 0]
+  const { start: scrollStart, end: scrollEnd } = getObjectScrollWindow(
+    index,
+    totalSlots,
+    projects.length
   );
-  const translateY = useTransform(scrollYProgress, [scrollStart, scrollEnd], [1200, -1200]);
-  const scale = useTransform(scrollYProgress, [scrollStart, scrollEnd], [0.85, 1.0]);
+
+  const translateY = useMotionValue(1200);
+  const scrollOpacity = useMotionValue(0);
+  const scale = useMotionValue(0.85);
+
+  useMotionValueEvent(scrollYProgress, 'change', (v) => {
+    const t = Math.max(0, Math.min(1, (v - scrollStart) / (scrollEnd - scrollStart)));
+    translateY.set(lerp(1200, -1200, t));
+    scale.set(lerp(0.85, 1.0, t));
+    scrollOpacity.set(computeOpacity(t, 0.2));
+  });
 
   return (
-    <motion.img
-      src={slot.src}
-      alt=""
-      aria-hidden="true"
-      draggable="false"
-      className={`absolute ${slot.size} h-auto falling-object ${
-        isGlowing ? 'falling-object-glow' : ''
-      } select-none`}
-      style={
-        mode === 'falling'
-          ? {
-              left: slot.left,
-              top: slot.top,
-              rotate: slot.rotation,
-              y: translateY,
-              scale,
-              opacity: scrollOpacity,
-              pointerEvents: 'none' as const,
-            }
-          : {
-              left: slot.left,
-              top: slot.top,
-              rotate: slot.rotation,
-              opacity: 0.2,
-              pointerEvents: 'none' as const,
-            }
-      }
-    />
+    <div
+      className="absolute"
+      style={{ left: slot.left, top: slot.top, pointerEvents: 'none' as const }}
+    >
+      <motion.img
+        src={slot.src}
+        alt=""
+        aria-hidden="true"
+        draggable="false"
+        className={`${slot.size} h-auto falling-object ${
+          isGlowing ? 'falling-object-glow' : ''
+        } select-none`}
+        style={
+          mode === 'falling'
+            ? {
+                rotate: slot.rotation,
+                y: translateY,
+                scale,
+                opacity: scrollOpacity,
+              }
+            : {
+                rotate: slot.rotation,
+                opacity: 0.2,
+              }
+        }
+      />
+    </div>
   );
 };
 

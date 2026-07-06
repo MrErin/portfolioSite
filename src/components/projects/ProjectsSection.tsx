@@ -44,7 +44,7 @@ const ProjectsSection = ({ onProjectClick }: ProjectsSectionProps) => {
   const totalCards = projects.length;
 
   // Cave floor scrolls up from below during the dead scroll space after last card
-  const caveFloorY = useTransform(scrollYProgress, [0.50, 0.60], ['100%', '0%']);
+  const caveFloorY = useTransform(scrollYProgress, [0.5, 0.6], ['100%', '0%']);
 
   // Reduced motion fallback: simple vertical stack
   if (prefersReducedMotion) {
@@ -112,14 +112,12 @@ const ProjectsSection = ({ onProjectClick }: ProjectsSectionProps) => {
       </div>
 
       <div className="sticky top-0 h-screen overflow-hidden flex items-center justify-center">
-        {/* Cave floor renders first so it paints behind falling objects and cards */}
         <motion.div
           aria-hidden="true"
           className={`absolute bottom-0 left-0 w-full ${CAVE_FLOOR_DECORATIVE}`}
           style={{ ...CAVE_FLOOR_STYLE, y: caveFloorY }}
         />
 
-        <FallingObjects scrollYProgress={scrollYProgress} mode="falling" />
         <ParticleField />
 
         <h2 className="absolute top-8 z-10 font-heading text-purple-light text-4xl text-center">
@@ -136,6 +134,9 @@ const ProjectsSection = ({ onProjectClick }: ProjectsSectionProps) => {
             onProjectClick={onProjectClick}
           />
         ))}
+
+        {/* FallingObjects renders after cards so it layers behind them visually (z-order) */}
+        <FallingObjects scrollYProgress={scrollYProgress} mode="falling" />
       </div>
     </section>
   );

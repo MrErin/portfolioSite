@@ -37,13 +37,21 @@ const INNER_PAD_RATIO = 0.01;
 const getScrollWindowForRatio = (
   index: number,
   total: number,
-  ratio: number
+  ratio: number,
+  customRange?: { start: number; end: number }
 ): { start: number; end: number } => {
   const stickyRange = STICKY_END - STICKY_START;
-  const innerPad = stickyRange * INNER_PAD_RATIO;
-  const rangeStart = STICKY_START + innerPad;
-  const rangeEnd = STICKY_END - innerPad;
   const windowSize = stickyRange * ratio;
+
+  let rangeStart: number, rangeEnd: number;
+  if (customRange) {
+    rangeStart = customRange.start;
+    rangeEnd = customRange.end;
+  } else {
+    const innerPad = stickyRange * INNER_PAD_RATIO;
+    rangeStart = STICKY_START + innerPad;
+    rangeEnd = STICKY_END - innerPad;
+  }
 
   if (total <= 1) {
     return { start: rangeStart, end: rangeEnd };
@@ -119,6 +127,18 @@ export const PARALLAX_CONFIG = {
  */
 const OBJECT_WINDOW_RATIO = 0.18;
 
-/** Get the scroll window for a falling object slot. */
-export const getObjectScrollWindow = (index: number, totalObjects: number) =>
-  getScrollWindowForRatio(index, totalObjects, OBJECT_WINDOW_RATIO);
+/**
+ * Get the scroll window for a falling object slot.
+ * Objects are constrained to the visual card range — they finish when the
+ * last card scrolls off-screen (its window midpoint), not when the sticky
+ * section ends.
+ */
+export const getObjectScrollWindow = (index: number, totalObjects: number, totalCards: number) => {
+  const firstCard = getCardScrollWindow(0, totalCards);
+  const lastCard = getCardScrollWindow(totalCards - 1, totalCards);
+  const range = {
+    start: firstCard.start,
+    end: (lastCard.start + lastCard.end) / 2,
+  };
+  return getScrollWindowForRatio(index, totalObjects, OBJECT_WINDOW_RATIO, range);
+};
