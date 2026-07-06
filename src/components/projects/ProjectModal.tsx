@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { FocusTrap } from 'focus-trap-react';
@@ -8,6 +9,15 @@ import type { Project } from './types';
 const LINK_CLASS =
   'inline-flex items-center gap-2 px-4 py-2 bg-surface border border-border rounded hover:border-purple-dark hover:text-purple-glow hover:shadow-glow-purple transition-all duration-300';
 
+const DEMO_BASE =
+  'inline-flex items-center justify-center gap-2 w-full py-3 px-6 rounded transition-all duration-300 focus-visible:ring-2 focus-visible:ring-focus-ring';
+
+const DEMO_STYLES: Record<number, string> = {
+  0: 'font-body text-text-primary bg-surface border border-border hover:border-text-muted',
+  1: 'font-heading text-purple-light bg-surface-dim border border-purple-dark hover:shadow-glow-purple',
+  2: 'font-heading text-gold bg-surface-dim border border-gold-dark uppercase tracking-wider hover:shadow-[0_0_12px_rgba(201,168,76,0.4)]',
+};
+
 interface ProjectModalProps {
   project: Project;
   onClose: () => void;
@@ -15,9 +25,18 @@ interface ProjectModalProps {
 }
 
 const ProjectModal = ({ project, onClose, cardOrigin }: ProjectModalProps) => {
-  const { config } = useWhimsy();
+  const { config, level } = useWhimsy();
+  const [hasImageError, setHasImageError] = useState(false);
 
-  // Calculate offset from viewport center for grow-from-card animation
+  const activeImageUrl = config.boringImages ? project.boringImageUrl : project.imageUrl;
+  const showImage = activeImageUrl && !hasImageError;
+
+  const headerGradientClass = config.boringImages
+    ? 'bg-gradient-to-br from-boring-dark via-boring to-boring-light'
+    : 'bg-gradient-to-br from-hollow via-shade to-dusk';
+
+  // Grow-from-card: offset the initial position away from the click origin so the modal
+  // appears to expand from the card rather than from the center of the viewport.
   const viewportCenterX = typeof window !== 'undefined' ? window.innerWidth / 2 : 0;
   const viewportCenterY = typeof window !== 'undefined' ? window.innerHeight / 2 : 0;
   const offsetX = cardOrigin ? cardOrigin.x - viewportCenterX : 0;
@@ -65,10 +84,22 @@ const ProjectModal = ({ project, onClose, cardOrigin }: ProjectModalProps) => {
         >
           <CloseButton onClick={onClose} ariaLabel="Close modal" />
 
-          <div
-            className="h-32 bg-gradient-to-br from-hollow via-shade to-dusk rounded-t-lg"
-            aria-hidden="true"
-          />
+          <div className="relative h-92 overflow-hidden rounded-t-lg">
+            {showImage && (
+              <img
+                src={activeImageUrl}
+                alt={project.name}
+                className="object-cover object-center w-full h-full rounded-t-lg"
+                onError={() => setHasImageError(true)}
+              />
+            )}
+            {!showImage && (
+              <div
+                className={`absolute inset-0 ${headerGradientClass} rounded-t-lg`}
+                aria-hidden="true"
+              />
+            )}
+          </div>
 
           <div className="p-6 md:p-8">
             <h2 className="font-display text-gold text-3xl mb-4">{project.name}</h2>
@@ -88,11 +119,19 @@ const ProjectModal = ({ project, onClose, cardOrigin }: ProjectModalProps) => {
               ))}
             </div>
 
-            <div className="bg-surface border border-border rounded p-8 mb-6 text-center">
-              <p className="text-text-muted">Demo placeholder</p>
-            </div>
+            {project.demoUrl && (
+              <a
+                href={project.demoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`${DEMO_BASE} ${DEMO_STYLES[level] ?? DEMO_STYLES[0]}`}
+              >
+                <FaExternalLinkAlt />
+                <span>View Website</span>
+              </a>
+            )}
 
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-4 mt-6">
               <a
                 href={project.repoUrl}
                 target="_blank"
@@ -102,18 +141,6 @@ const ProjectModal = ({ project, onClose, cardOrigin }: ProjectModalProps) => {
                 <FaGithub />
                 <span>View Repository</span>
               </a>
-
-              {project.demoUrl && (
-                <a
-                  href={project.demoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={LINK_CLASS}
-                >
-                  <FaExternalLinkAlt />
-                  <span>Live Demo</span>
-                </a>
-              )}
             </div>
           </div>
         </motion.div>

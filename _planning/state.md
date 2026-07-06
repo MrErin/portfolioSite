@@ -1,33 +1,25 @@
 # Project State
 
 ## Current Phase
-Phase: 3 — Component Integration
-Status: complete
-Last Updated: 2026-07-03
+Phase: none
+Status: archived — ready for next feature
+Last Updated: 2026-07-06
 
 ## Requirements Location
-`_planning/requirements.md`
+`_planning/requirements.md` (none — workspace cleared)
 
 ## Session Log
 | Date | Action |
 |------|--------|
-| 2026-07-03 | Archived MVP to `_planning/archive/mvp/`. Extracted `project-requirements/` (mvp.md, core.md, index.md). Cycled 12 decisions. Workspace cleared. |
-| 2026-07-03 | Dewhimsifier feature requirements written. Roadmap initialized. 3 phases planned. |
-| 2026-07-03 | Phase 1 complete. WhimsyContext & Config shipped and UA confirmed. |
-| 2026-07-03 | Phase 2 complete. WhimsySlider built — fixed top-left, native range input, pulse animation, tick marks, a11y. Wired into App.tsx. |
-| 2026-07-03 | Phase 3 planned. Component Integration — 4 tasks wiring ParticleField, ProjectCard, ProjectModal, ProjectsSection to WhimsyContext. |
-| 2026-07-03 | Phase 3 built. All 4 components now consume useWhimsy(). ParticleField respects config.particles, ProjectCard swaps gradient on config.boringImages, ProjectModal switches animation on config.growFromCard, ProjectsSection toggles parallax/grid on config.parallax. TypeScript + ESLint + Vite build all clean. |
-| 2026-07-03 | Phase 3 UA confirmed. All checks passed. 2 decisions logged (grey gradient, layout jump). 1 new deferred item (close button focus state). Phase closed. |
+| 2026-07-06 | Archived feature-visuals to `_planning/archive/visuals/`. Extracted `project-requirements/visuals.md`. Cycled 7 decisions (4→requirements, 1→scope exclusion, 2→feature trade-offs). Closed all deferred items. Workspace cleared. |
+| 2026-07-04 | Phase 6 build complete. Cave floor: shared CSS constants, h-64 with object-cover/object-bottom, mask-image top edge fade. Stop 1 edge-to-edge. Stop 2 inside sticky container with useTransform scroll-in. FallingObjects vertical range reduced. |
+| 2026-07-04 | Phase 5 build complete. Profile photo, demo button, cave floor, hero shrink, scroll arrow, grid flexbox. |
+| 2026-07-04 | Phase 4 build complete. FallingObjects.tsx with 6 Alice SVG silhouettes, scroll-linked and static modes. |
+| 2026-07-04 | Phase 3 build complete. Project images with boring/regular URLs, error fallback to gradient. |
+| 2026-07-04 | Phase 2 build complete. Hero ground silhouette SVG, whimsy-driven visibility. |
+| 2026-07-04 | Phase 1 build complete. Whimsy slider restyle with three visual states, polarity reversal. |
+| 2026-07-03 | Feature interview complete: Visual Polish & Images. Created requirements.md, image-inventory.md, image-generation-guide.md. |
+| 2026-07-03 | Archived feature-dewhimsifier to `_planning/archive/feature-dewhimsifier/`. Extracted `project-requirements/feature-dewhimsifier.md`. Cycled 4 decisions. Workspace cleared. |
 
 ## Blockers
 None.
-
-## Recent Decisions (Quick Reference)
-| Decision | Date | Rationale |
-|----------|------|-----------|
-| 3-stop whimsy model | 2026-07-03 | Max (parallax+particles), Mid (grid+particles), Min (grid+no particles+grey images) |
-| No persistence | 2026-07-03 | Resets to max whimsy on every load — first impression is always the creative version |
-| Config-driven flags | 2026-07-03 | WHIMSY_LEVELS object maps each stop to feature flags — one line to change a stop |
-| Native range input | 2026-07-03 | Accessible out of the box; keyboard nav, ARIA, touch all handled by browser |
-
-*Full details in decisions.md*

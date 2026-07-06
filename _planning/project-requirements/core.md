@@ -20,12 +20,16 @@
 
 - No backend, no API calls, no server-side rendering
 - No environment variables or secrets
-- No images — gradient placeholders only (real assets are a future phase)
+- No images — gradient placeholders only (real assets are a future phase)  ~~Replaced by visuals feature~~
 - No animation mode toggle — diagonal drift is the single permanent mode
 - No About/Contact FABs — single email button only
 - No separate About and Contact panels — combined into one slide-in panel
 - No custom hooks for scroll progress or reduced motion — use Framer Motion built-ins or inline
 - No barrel file for top-level exports beyond feature directories (my-style: no barrel files rule)
+- No SVG looking-glass frame overlays on thumbnails (aspect ratio incompatibility)
+- No SVG ornamentation on whimsy slider (pure CSS ceiling reached; deferred to future Victorian frame asset work)
+- No persistent whimsy preference (resets to max on load)
+- No font or color palette changes based on whimsy level
 
 ## Non-Functional Constraints
 

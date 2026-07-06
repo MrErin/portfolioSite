@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useWhimsy } from '@/components/whimsy/WhimsyContext';
 import type { Project } from './types';
 
@@ -10,10 +10,14 @@ interface ProjectCardProps {
 const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
   const articleRef = useRef<HTMLElement>(null);
   const { config } = useWhimsy();
+  const [hasImageError, setHasImageError] = useState(false);
+
+  const activeImageUrl = config.boringImages ? project.boringImageUrl : project.imageUrl;
+  const showImage = activeImageUrl && !hasImageError;
 
   const thumbnailClass = config.boringImages
-    ? 'h-40 bg-gradient-to-br from-gray-800 via-gray-700 to-gray-600'
-    : 'h-40 bg-gradient-to-br from-hollow via-shade to-dusk';
+    ? 'bg-gradient-to-br from-boring-dark via-boring to-boring-light'
+    : 'bg-gradient-to-br from-hollow via-shade to-dusk';
 
   const handleClick = () => {
     if (onClick && articleRef.current) {
@@ -37,16 +41,23 @@ const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
       onClick={handleClick}
       onKeyDown={handleKeyDown}
     >
-      {/* Gradient thumbnail placeholder */}
-      <div className={thumbnailClass} aria-hidden="true" />
+      <div className="relative h-40 overflow-hidden">
+        {showImage && (
+          <img
+            src={activeImageUrl}
+            alt={project.name}
+            className="object-cover object-center w-full h-full"
+            onError={() => setHasImageError(true)}
+          />
+        )}
+        {!showImage && <div className={`absolute inset-0 ${thumbnailClass}`} aria-hidden="true" />}
+      </div>
 
-      {/* Card content */}
       <div className="p-6">
         <h3 className="font-heading text-text-primary text-xl mb-3 transition-colors duration-300 group-hover:text-gold">
           {project.name}
         </h3>
 
-        {/* Tech stack badges */}
         <div className="flex flex-wrap gap-2">
           {project.techStack.map((tech) => (
             <span

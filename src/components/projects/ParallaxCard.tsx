@@ -76,7 +76,7 @@ const ParallaxCard = ({
 
   return (
     <motion.div
-      className={`absolute w-[90%] max-w-sm md:max-w-md ${horizontalClass}`}
+      className={`absolute z-10 w-[90%] max-w-sm md:max-w-md ${horizontalClass}`}
       initial={{ opacity: 0 }}
       style={{
         y: translateY,

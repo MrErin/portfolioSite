@@ -45,9 +45,14 @@
   --color-teal: #3b8a75;
   --color-teal-light: #5cb49a;
 
+  /* Boring-state gradient: neutral grey for stop-0 fallbacks */
+  --color-boring-dark: #1f2937;
+  --color-boring: #374151;
+  --color-boring-light: #4b5563;
+
   /* Surface colors */
   --color-surface-dim: rgba(61, 43, 90, 0.3);
-  --color-surface: rgba(61, 43, 90, 0.5);
+  --color-surface: rgba(61, 43, 90, 1);
   --color-surface-bright: rgba(61, 43, 90, 0.7);
   --color-border: rgba(155, 126, 180, 0.2);
 
@@ -175,28 +180,133 @@ button {
   animation: float linear infinite;
 }
 
-/* Whimsy slider pulse animation */
-@keyframes whimsy-pulse {
+@keyframes thumb-glow {
   0%,
   100% {
-    box-shadow: 0 0 8px rgba(155, 126, 180, 0.3);
+    box-shadow:
+      inset 0 -2px 3px rgba(0, 0, 0, 0.3),
+      0 0 0 2px var(--color-gold-dark),
+      0 0 14px rgba(201, 168, 76, 0.5),
+      0 2px 4px rgba(0, 0, 0, 0.3);
   }
   50% {
-    box-shadow: 0 0 16px rgba(155, 126, 180, 0.6);
+    box-shadow:
+      inset 0 -2px 3px rgba(0, 0, 0, 0.3),
+      0 0 0 2px var(--color-gold-dark),
+      0 0 22px rgba(201, 168, 76, 0.8),
+      0 2px 4px rgba(0, 0, 0, 0.3);
   }
 }
 
-.whimsy-pulse {
-  animation: whimsy-pulse 3s ease-in-out infinite;
+/* ====== Falling Objects ====== */
+
+.falling-object {
+  filter: invert(1) sepia(0.3) hue-rotate(220deg) saturate(0.5);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .whimsy-pulse {
-    animation: none;
+.falling-object-glow {
+  animation: object-glow 2.5s ease forwards;
+}
+
+@keyframes object-glow {
+  0%,
+  100% {
+    filter: invert(1) sepia(0.3) hue-rotate(220deg) saturate(0.5);
+  }
+  40%,
+  60% {
+    filter: invert(1) sepia(0.3) hue-rotate(220deg) saturate(0.5)
+      drop-shadow(0 0 16px var(--color-gold)) drop-shadow(0 0 6px var(--color-gold-light));
   }
 }
 
-/* Range input base styles */
+/* ====== Whimsy Slider ====== */
+
+/* Container */
+.whimsy-slider {
+  position: fixed;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  background: var(--color-surface-dim);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--color-border);
+  top: max(1rem, env(safe-area-inset-top));
+  left: max(1rem, env(safe-area-inset-left));
+  transition:
+    padding 300ms ease,
+    border-color 300ms ease,
+    opacity 300ms ease;
+}
+
+/* Collapsed state — tappable "Whimsy" pill */
+.whimsy-slider--collapsed {
+  padding: 0.3rem 0.5rem;
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+.whimsy-slider--collapsed > input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
+
+.whimsy-slider--collapsed .whimsy-slider__stop-name {
+  display: none;
+}
+
+.whimsy-slider--collapsed .whimsy-slider__label {
+  margin: 0;
+}
+
+/* Labels — default (stop 0, clean minimal) */
+.whimsy-slider__label {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  margin: 0 0 0.25rem;
+  letter-spacing: normal;
+  text-align: center;
+  transition:
+    color 250ms ease,
+    font-family 250ms ease,
+    letter-spacing 250ms ease;
+}
+
+.whimsy-slider__stop-name {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  margin: 0.25rem 0 0;
+  text-align: center;
+  transition:
+    color 250ms ease,
+    font-family 250ms ease,
+    letter-spacing 250ms ease;
+}
+
+/* Stop 1 — toned down labels */
+[data-whimsy='1'] .whimsy-slider__label,
+[data-whimsy='1'] .whimsy-slider__stop-name {
+  font-family: var(--font-heading);
+  letter-spacing: 0.03em;
+  color: var(--color-text-secondary);
+}
+
+/* Stop 2 — ornate Victorian labels */
+[data-whimsy='2'] .whimsy-slider__label,
+[data-whimsy='2'] .whimsy-slider__stop-name {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+}
+
+/* ====== Range input base ====== */
 .whimsy-range {
   -webkit-appearance: none;
   appearance: none;
@@ -206,47 +316,273 @@ button {
   width: 100%;
 }
 
+/* ====== Stop 0 — Clean Minimal (default) ====== */
+
 .whimsy-range::-webkit-slider-runnable-track {
-  height: 4px;
-  background: var(--color-purple);
-  border-radius: 2px;
+  height: 3px;
+  background: var(--color-border);
+  border-radius: 3px;
+  box-shadow: none;
+  transition:
+    background 250ms ease,
+    box-shadow 250ms ease,
+    height 250ms ease;
 }
 
+.whimsy-range::-moz-range-track {
+  height: 3px;
+  background: var(--color-border);
+  border-radius: 3px;
+  border: none;
+  box-shadow: none;
+  transition:
+    background 250ms ease,
+    box-shadow 250ms ease,
+    height 250ms ease;
+}
+
+/* Thumb — simple circle */
 .whimsy-range::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: var(--color-purple-light);
-  border: 1px solid var(--color-purple-glow);
-  margin-top: -6px;
-}
-
-.whimsy-range::-moz-range-track {
-  height: 4px;
-  background: var(--color-purple);
-  border-radius: 2px;
-  border: none;
+  background: var(--color-text-secondary);
+  border: 1px solid var(--color-text-dim);
+  margin-top: -6.5px;
+  box-shadow: none;
+  transition:
+    background 250ms ease,
+    border 250ms ease,
+    box-shadow 250ms ease,
+    width 250ms ease,
+    height 250ms ease;
 }
 
 .whimsy-range::-moz-range-thumb {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: var(--color-purple-light);
-  border: 1px solid var(--color-purple-glow);
+  background: var(--color-text-secondary);
+  border: 1px solid var(--color-text-dim);
+  box-shadow: none;
+  transition:
+    background 250ms ease,
+    border 250ms ease,
+    box-shadow 250ms ease,
+    width 250ms ease,
+    height 250ms ease;
 }
 
+/* ====== Stop 1 — Toned Down ====== */
+
+[data-whimsy='1'] .whimsy-range::-webkit-slider-runnable-track {
+  height: 5px;
+  background: var(--color-purple);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+[data-whimsy='1'] .whimsy-range::-moz-range-track {
+  height: 5px;
+  background: var(--color-purple);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+[data-whimsy='1'] .whimsy-range::-webkit-slider-thumb {
+  width: 20px;
+  height: 20px;
+  margin-top: -7.5px;
+  background: radial-gradient(circle at 35% 35%, var(--color-purple-light), var(--color-purple));
+  border: 1px solid var(--color-purple-glow);
+  box-shadow:
+    0 0 4px rgba(155, 126, 180, 0.2),
+    0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+[data-whimsy='1'] .whimsy-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: radial-gradient(circle at 35% 35%, var(--color-purple-light), var(--color-purple));
+  border: 1px solid var(--color-purple-glow);
+  box-shadow:
+    0 0 4px rgba(155, 126, 180, 0.2),
+    0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* ====== Stop 2 — Ornate Victorian ====== */
+
+[data-whimsy='2'] .whimsy-range::-webkit-slider-runnable-track {
+  height: 6px;
+  background: linear-gradient(
+    to right,
+    var(--color-gold-dark),
+    var(--color-gold),
+    var(--color-gold-dark)
+  );
+  box-shadow:
+    inset 0 2px 2px rgba(0, 0, 0, 0.5),
+    inset 0 -1px 1px rgba(230, 214, 138, 0.2),
+    0 1px 0 rgba(230, 214, 138, 0.1);
+}
+
+[data-whimsy='2'] .whimsy-range::-moz-range-track {
+  height: 6px;
+  background: linear-gradient(
+    to right,
+    var(--color-gold-dark),
+    var(--color-gold),
+    var(--color-gold-dark)
+  );
+  box-shadow:
+    inset 0 2px 2px rgba(0, 0, 0, 0.5),
+    inset 0 -1px 1px rgba(230, 214, 138, 0.2),
+    0 1px 0 rgba(230, 214, 138, 0.1);
+}
+
+/* Thumb — ornate gold knob */
+[data-whimsy='2'] .whimsy-range::-webkit-slider-thumb {
+  width: 22px;
+  height: 22px;
+  margin-top: -8px;
+  background: radial-gradient(
+    circle at 35% 35%,
+    var(--color-gold-light),
+    var(--color-gold),
+    var(--color-gold-dark)
+  );
+  border: 2px solid var(--color-gold-dark);
+  box-shadow:
+    inset 0 -2px 3px rgba(0, 0, 0, 0.3),
+    0 0 0 2px var(--color-gold-dark),
+    0 0 14px rgba(201, 168, 76, 0.5),
+    0 2px 4px rgba(0, 0, 0, 0.3);
+  animation: thumb-glow 3s ease-in-out infinite;
+}
+
+[data-whimsy='2'] .whimsy-range::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  background: radial-gradient(
+    circle at 35% 35%,
+    var(--color-gold-light),
+    var(--color-gold),
+    var(--color-gold-dark)
+  );
+  border: 2px solid var(--color-gold-dark);
+  box-shadow:
+    inset 0 -2px 3px rgba(0, 0, 0, 0.3),
+    0 0 0 2px var(--color-gold-dark),
+    0 0 14px rgba(201, 168, 76, 0.5),
+    0 2px 4px rgba(0, 0, 0, 0.3);
+  animation: thumb-glow 3s ease-in-out infinite;
+}
+
+/* ====== Focus visible ====== */
 .whimsy-range:focus-visible {
   outline: none;
 }
 
 .whimsy-range:focus-visible::-webkit-slider-thumb {
   outline: 2px solid var(--color-focus-ring);
-  outline-offset: 2px;
+  outline-offset: 3px;
 }
 
 .whimsy-range:focus-visible::-moz-range-thumb {
   outline: 2px solid var(--color-focus-ring);
-  outline-offset: 2px;
+  outline-offset: 3px;
+}
+
+/* ====== Mobile responsive ====== */
+@media (max-width: 639px) {
+  .whimsy-slider {
+    position: static;
+    top: auto;
+    left: auto;
+    padding: 0.35rem 0.5rem;
+  }
+
+  .whimsy-slider__label {
+    font-size: 0.8rem;
+    margin-bottom: 0.15rem;
+  }
+
+  .whimsy-slider__stop-name {
+    font-size: 0.75rem;
+    margin-top: 0.15rem;
+  }
+
+  .whimsy-range {
+    min-height: 36px;
+  }
+
+  /* Stop 1 thumb — slightly smaller on mobile */
+  [data-whimsy='1'] .whimsy-range::-webkit-slider-thumb {
+    width: 18px;
+    height: 18px;
+    margin-top: -6.5px;
+  }
+
+  [data-whimsy='1'] .whimsy-range::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Stop 2 thumb — slightly smaller on mobile */
+  [data-whimsy='2'] .whimsy-range::-webkit-slider-thumb {
+    width: 20px;
+    height: 20px;
+    margin-top: -7px;
+  }
+
+  [data-whimsy='2'] .whimsy-range::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Larger touch target for collapsed pill on mobile */
+  .whimsy-slider--collapsed {
+    min-height: 2.5rem;
+    padding: 0.4rem 0.6rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .whimsy-slider,
+  .whimsy-range::-webkit-slider-thumb,
+  .whimsy-range::-moz-range-thumb,
+  .whimsy-range::-webkit-slider-runnable-track,
+  .whimsy-range::-moz-range-track,
+  .whimsy-slider__label,
+  .whimsy-slider__stop-name {
+    transition: none;
+  }
+
+  [data-whimsy='2'] .whimsy-range::-webkit-slider-thumb,
+  [data-whimsy='2'] .whimsy-range::-moz-range-thumb {
+    animation: none;
+  }
+
+  .falling-object-glow {
+    animation: none;
+  }
+
+  .animate-scroll-bounce {
+    animation: none;
+  }
+}
+
+/* ====== Hero scroll arrow bounce ====== */
+
+@keyframes scroll-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+}
+
+.animate-scroll-bounce {
+  animation: scroll-bounce 2s ease-in-out infinite;
 }
