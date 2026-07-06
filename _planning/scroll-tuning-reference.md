@@ -8,7 +8,7 @@ All scroll progress values are fractions of 0-1, where 0 = section enters viewpo
 
 ## 0. Cards vs. Objects — Side-by-Side Comparison
 
-Both components use the same pattern: `useTransform(scrollYProgress, [scrollStart, scrollEnd], outputRange)`. The structure is identical; only the numbers differ.
+Cards use `useTransform(scrollYProgress, ...)` for reactive transforms. Objects use `useMotionValueEvent` + `useMotionValue` with manual interpolation (see "Implementation Note" below for why).
 
 ### Scroll-linked transforms
 
@@ -17,10 +17,11 @@ Both components use the same pattern: `useTransform(scrollYProgress, [scrollStar
 | Window source | `getCardScrollWindow` (WINDOW_RATIO = 0.5) | `getObjectScrollWindow` (OBJECT_WINDOW_RATIO = 0.18, constrained to card range) | Same underlying function, different ratio + range |
 | Fade margins | 15% of window | 15% of window | Identical |
 | Max opacity | **1.0** | **0.2** | Different constant |
-| translateY | **[1000, -2000]** asymmetric | **[1200, -1200]** symmetric | Same pattern, different numbers |
-| scale | **[0.9, 1.1]** | **[0.85, 1.0]** | Same pattern, different numbers |
+| translateY | **[1000, -2000]** asymmetric | **[1200, -1200]** symmetric | Same math, different numbers |
+| scale | **[0.9, 1.1]** | **[0.85, 1.0]** | Same math, different numbers |
 | rotate | scroll-linked **[-20, 20]** | static (set once on mount) | Different approach |
 | translateX | scroll-linked **[-120, 120]**, alternating by index | none | Cards only |
+| Implementation | `useTransform` (5 cards = 25 subscriptions) | `useMotionValueEvent` + `useMotionValue` (24 listeners) | Different mechanism |
 
 ### What this means in practice
 
@@ -29,6 +30,10 @@ Both components use the same pattern: `useTransform(scrollYProgress, [scrollStar
 - **Card opacity peaks at 1.0**, objects peak at **0.2** — objects are always faint/ghostly.
 - **Cards rotate as they scroll** (tumbling); objects have a **fixed rotation** assigned on mount.
 - **Cards drift horizontally** (alternating left/right); objects have **no horizontal scroll movement**.
+
+### Implementation note: why objects don't use useTransform
+
+Framer Motion v12 has a bug where many concurrent `useTransform` subscriptions to the same `MotionValue` partially fail to connect. With 24 objects × 3 transforms each = 72 subscriptions, most objects would appear "stuck" on initial page load. The workaround: objects use a single `useMotionValueEvent` listener per instance (24 total) that manually computes and `.set()`s three `useMotionValue` values. This is reliable at any subscriber count. Cards (5 × 5 = 25 subscriptions) are below the failure threshold and use `useTransform` without issues.
 
 ### Raw transform code (for quick reference)
 
@@ -42,12 +47,14 @@ scale         -> useTransform(progress, [s, e], [0.9, 1.1])
 translateX    -> useTransform(progress, [s, e], [-120, 120])   // negated for odd cards
 ```
 
-**FallingObject in FallingObjects.tsx (lines 81-95):**
+**FallingObject in FallingObjects.tsx:**
 ```
 scrollWindow  -> getObjectScrollWindow(index, totalSlots, projects.length)
-opacity       -> useTransform(progress, [s, s+fade, e-fade, e], [0, 0.2, 0.2, 0])
-translateY    -> useTransform(progress, [s, e], [1200, -1200])
-scale         -> useTransform(progress, [s, e], [0.85, 1.0])
+// All computed manually in a single useMotionValueEvent callback:
+// t = clamp((scrollProgress - start) / (end - start), 0, 1)
+translateY    -> lerp(1200, -1200, t)
+scale         -> lerp(0.85, 1.0, t)
+opacity       -> computeOpacity(t, 0.2)  // 4-keyframe: 0 → 0.2 → 0.2 → 0 with 15% fade margins
 (no scroll-linked rotate — rotation is static from slot)
 (no translateX)
 ```
@@ -279,15 +286,15 @@ Each object gets random values on mount:
 - **size**: random pick from `['w-48', 'w-56', 'w-64', 'w-80']`
 - **src**: random pick from 6 SVG silhouettes
 
-### Object translateY = [1200, -1200] (FallingObjects.tsx:94)
+### Object translateY: lerp(1200, -1200, t) (FallingObjects.tsx)
 
-Vertical travel in pixels, mapped to each object's [scrollStart, scrollEnd]. The object's actual screen position = `top` + `translateY`.
+Vertical travel in pixels, computed from normalized progress `t` within each object's scroll window. The object's actual screen position = `top` + `translateY`.
 
-- **[0] = 1200**: Starting Y offset. Object begins 1200px below its `top` position.
+- **1200** (start): Object begins 1200px below its `top` position.
   - Increase: starts further below viewport, enters later in its scroll window
   - Decrease: starts closer to `top`, enters sooner
   - At 1200: object at top=5% (45px) is at 1245px → below a 1080p viewport but inside a 1440p one
-- **[1] = -1200**: Ending Y offset. Object ends 1200px above its `top` position.
+- **-1200** (end): Object ends 1200px above its `top` position.
   - More negative: exits further above viewport, leaves sooner in its window
   - Less negative: lingers longer, exits later
 
@@ -300,25 +307,23 @@ Vertical travel in pixels, mapped to each object's [scrollStart, scrollEnd]. The
 
 So each object is visible for about 20vh of scroll distance. The user must scroll ~20% of the viewport height to see an object cross from bottom to top.
 
-### Object scale = [0.85, 1.0] (FallingObjects.tsx:95)
+### Object scale: lerp(0.85, 1.0, t) (FallingObjects.tsx)
 
-- **[0] = 0.85**: starts at 85% size
-- **[1] = 1.0**: ends at full size
+- **0.85** (start): starts at 85% size
+- **1.0** (end): ends at full size
 
-### Object opacity (FallingObjects.tsx:89-93)
+### Object opacity: computeOpacity(t, 0.2) (FallingObjects.tsx)
 
-```
-fadeMargin = objectWindowSize * 0.15 = 0.108 * 0.15 = 0.0162
-```
+Uses 15% fade margins at each end of the normalized progress range.
 
-| Scroll position | Opacity | Note |
+| Normalized t | Opacity | Note |
 |---|---|---|
-| scrollStart | 0 | invisible |
-| scrollStart + 0.0162 | 0.2 | faded in |
-| scrollEnd - 0.0162 | 0.2 | still visible |
-| scrollEnd | 0 | faded out |
+| 0 | 0 | invisible |
+| 0.15 | 0.2 | faded in |
+| 0.85 | 0.2 | still visible |
+| 1.0 | 0 | faded out |
 
-**Max opacity is 0.2** — objects are always faint/ghostly. This is hardcoded in the `[0, 0.2, 0.2, 0]` array on line 92.
+**Max opacity is 0.2** — objects are always faint/ghostly. This is the `peak` parameter passed to `computeOpacity`.
 
 ### GLOW_INTERVAL_MS = 3500 (FallingObjects.tsx)
 
@@ -361,17 +366,17 @@ absolute bottom-0 left-0 w-full
 
 Anchored to the bottom of the sticky viewport container.
 
-### Render order in sticky container (ProjectsSection.tsx:114-138)
+### Render order in sticky container (ProjectsSection.tsx:114-141)
 
-Elements paint in DOM order. Later = on top.
+Elements paint in DOM order (later = on top), modified by z-index.
 
 1. **Cave floor** (behind everything)
-2. **FallingObjects** (on top of floor)
-3. **ParticleField**
-4. **"Projects" heading** (z-10)
-5. **ParallaxCards** (on top of everything)
+2. **ParticleField**
+3. **"Projects" heading** (z-10)
+4. **ParallaxCards** (z-10, on top of objects)
+5. **FallingObjects** (last in DOM, but below cards due to z-10)
 
-If objects are visible when the floor is visible, they will paint ON TOP of the floor.
+Cards have `z-10` to stay above objects despite rendering earlier in the DOM. If objects are visible when the floor is visible, they will paint on top of the floor but behind the cards.
 
 ---
 
@@ -414,10 +419,10 @@ What happens at each scroll progress value with current settings (5 cards, 24 ob
 | Objects last longer per-object | Increase `OBJECT_WINDOW_RATIO` |
 | Objects appear/end earlier or later | Edit `range.start` / `range.end` in `getObjectScrollWindow` |
 | Objects spread across full sticky range | Remove `customRange` arg, revert to `getScrollWindowForRatio(index, totalObjects, OBJECT_WINDOW_RATIO)` |
-| Objects brighter/more visible | Change `0.2` in opacity output array `[0, 0.2, 0.2, 0]` |
-| Objects travel further (faster through viewport) | Increase spread of `translateY` array (e.g., `[1500, -1500]`) |
-| Objects travel less (slower, linger in viewport) | Decrease spread of `translateY` array (e.g., `[800, -800]`) |
-| Objects start from further off-screen | Increase `translateY[0]` |
+| Objects brighter/more visible | Change `peak` parameter in `computeOpacity(t, 0.2)` call |
+| Objects travel further (faster through viewport) | Increase the `lerp` range for translateY (e.g., `lerp(1500, -1500, t)`) |
+| Objects travel less (slower, linger in viewport) | Decrease the `lerp` range for translateY (e.g., `lerp(800, -800, t)`) |
+| Objects start from further off-screen | Increase the first arg of translateY `lerp` and its `useMotionValue` initial |
 | Objects behind the cave floor | Move `<FallingObjects>` BEFORE the cave floor `<motion.div>` in JSX |
 | Cave floor appears earlier/later | Change `caveFloorY` input array `[0.50, 0.60]` |
 | More/fewer total objects | Change `FALLING_SLOT_COUNT` |
