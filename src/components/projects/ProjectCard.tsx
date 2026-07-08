@@ -9,12 +9,12 @@ interface ProjectCardProps {
 }
 
 const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
-  const articleRef = useRef<HTMLElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
   const { showImage, activeUrl, gradientClass, onError } = useProjectImage(project);
 
   const handleClick = () => {
-    if (onClick && articleRef.current) {
-      onClick(project, articleRef.current.getBoundingClientRect());
+    if (onClick && cardRef.current) {
+      onClick(project, cardRef.current.getBoundingClientRect());
     }
   };
 
@@ -26,8 +26,8 @@ const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
   };
 
   return (
-    <article
-      ref={articleRef}
+    <div
+      ref={cardRef}
       role="button"
       tabIndex={0}
       className="group overflow-hidden rounded-lg bg-surface border border-border transition-all duration-300 hover:border-purple-dark hover:shadow-glow-purple hover:bg-surface-bright cursor-pointer"
@@ -53,7 +53,7 @@ const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
 
         <TechBadges techs={project.techStack} />
       </div>
-    </article>
+    </div>
   );
 };
 
