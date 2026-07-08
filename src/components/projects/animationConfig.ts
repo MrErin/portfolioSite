@@ -4,6 +4,12 @@
  */
 export const SECTION_HEIGHT_VH = 400;
 
+/** Fade margin as a fraction of window size — used for opacity fade in/out. */
+export const FADE_MARGIN = 0.15;
+
+/** Linear interpolation between two values based on normalized progress. */
+export const lerp = (from: number, to: number, t: number): number => from + (to - from) * t;
+
 /**
  * With offset ['start end', 'end start'], scroll progress 0→1 spans
  * the entire journey from "section enters viewport" to "section leaves."
@@ -79,7 +85,7 @@ export const getCardScrollWindow = (index: number, totalCards: number) =>
 /** Shared opacity fade calculator from scroll window bounds. */
 const getOpacityRange = (start: number, end: number): { input: number[]; output: number[] } => {
   const windowLength = end - start;
-  const fadeMargin = windowLength * 0.15;
+  const fadeMargin = windowLength * FADE_MARGIN;
 
   return {
     input: [start, start + fadeMargin, end - fadeMargin, end],

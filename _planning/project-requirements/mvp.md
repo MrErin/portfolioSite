@@ -22,19 +22,18 @@
 
 ## Architecture
 
-- Feature-based directory structure: `src/components/`, `src/features/{hero,projects,about,contact}/`, `src/data/`, `src/types/`
-- Barrel exports from each feature directory (`index.ts`)
+- Component-based directory structure: `src/components/{core,projects,about,whimsy}/`, `src/data/`
 - Overlay state managed in `App.tsx` (selectedProject, cardOrigin, panelOpen)
 - Arrow function components with explicit prop interfaces
-- Single animation config file collocated with its consumer: `features/projects/animationConfig.ts`
+- Single animation config file collocated with its consumer: `components/projects/animationConfig.ts`
 
 ## Animation System
 
 - Sticky viewport pattern: tall section (`SECTION_HEIGHT_VH`, currently 400vh) with pinned 100vh inner container
 - Scroll-linked parallax via Framer Motion `useScroll` + `useTransform` — scroll position maps to card transforms, not one-shot triggers
-- Single mode: Diagonal Drift (rotate ±10°, translateX ±120px, translateY 600→-600px, scale 0.9→1.1)
+- Single mode: Diagonal Drift (rotate ±20°, translateX ±120px, translateY 1000→-2000px, scale 0.9→1.1)
 - Per-card scroll windows with staggered start points, restricted to sticky-pinned range (~0.20→0.80)
-- `WINDOW_RATIO` (0.3) and `INNER_PAD_RATIO` control window sizing and padding
+- `WINDOW_RATIO` (0.5) and `INNER_PAD_RATIO` control window sizing and padding
 - Cards alternate left/right positioning on desktop, centered on mobile
 - `prefers-reduced-motion` fallback: static vertical card list, no parallax, no particles
 - Cards start with `initial={{ opacity: 0 }}` to prevent one-frame flash before scroll computation

@@ -1,7 +1,7 @@
 # Project Requirements Index
 
 ## Core (→ core.md)
-- Feature-based directory structure with barrel exports per feature
+- Component-based directory structure with direct imports
 - Tailwind v4 CSS-first theme config, Framer Motion for animations, focus-trap-react for a11y
 - No backend, no animation toggle, single combined panel; real images with gradient fallbacks
 - All animations respect prefers-reduced-motion, all elements keyboard-accessible
@@ -22,7 +22,7 @@
 
 ## Visual Polish (→ visuals.md)
 - Slider has three CSS visual states (minimal/toned/ornate), polarity left=min right=max, auto-collapses after idle
-- Project images with dual URLs (boring/regular), error fallback to gradient, modal h-64 header
+- Project images with dual URLs (boring/regular), error fallback to gradient, modal h-92 header
 - Hero dynamic height (30vh/fullscreen), ground silhouette SVG, dynamic h1 title
 - Cave floor SVG at stops 1–2: static below grid (stop 1), scroll-linked inside sticky (stop 2)
 - 6 Alice-themed SVG falling objects behind cards: scroll-linked at stop 2, static glow at stop 1
