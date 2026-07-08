@@ -12,6 +12,7 @@
 | Icons | React Icons | 5.5 |
 | Linting | ESLint 9 + TypeScript ESLint | 9.39 / 8.48 |
 | Formatting | Prettier | 3.8 |
+| Path aliases | vite-tsconfig-paths | 6.1 |
 
 ## Architecture
 
@@ -41,29 +42,33 @@ src/
 │   │   ├── ProjectsSection.tsx# 3 render modes: sticky parallax (Stop 2) + FallingObjects falling + scroll bounce arrow + cave floor scroll-in inside sticky container, flexbox grid+particles (Stops 0–1) + FallingObjects static + cave floor below grid (edge-to-edge), vertical stack (reduced motion); inline useScroll + useTransform
 │   │   └── types.ts          # Project interface (with optional imageUrl, optional boringImageUrl)
 │   └── whimsy/
-│       ├── WhimsyContext.tsx  # Context + provider, 3-stop level model (WhimsyLevel → WhimsyConfig flags)
-│       └── WhimsySlider.tsx   # Fixed native range input, 3 stops, safe-area-aware positioning
+│       ├── WhimsyContext.tsx  # Context + provider, 3-stop level model
+│       ├── WhimsySlider.tsx   # Fixed native range input, 3 stops, safe-area-aware positioning
+│       └── whimsyTypes.ts     # WhimsyLevel type, WhimsyConfig interface, WHIMSY_LEVELS constant
 └── data/
-    └── projects.ts            # 5 mock projects (themed names)
+    └── projects.ts            # 5 projects
 └── assets/
     ├── caveFloor.svg          # Cave floor decoration (Projects section, stops 1–2)
     ├── headshot.jpeg          # Profile photo (About panel)
     ├── armchair.svg           # Potrace-traced armchair silhouette (1024×1024 viewBox) — falling object
+    ├── arrow.svg              # Scroll bounce arrow (Projects section, stop 2)
     ├── book.svg               # Potrace-traced open book silhouette (1024×1024 viewBox) — falling object
     ├── card.svg               # Potrace-traced playing card silhouette (1024×1024 viewBox) — falling object
     ├── cup.svg                # Potrace-traced teacup silhouette (1024×1024 viewBox) — falling object
     ├── herosilhouette.svg     # Potrace-traced underground earth/roots/grass silhouette (2064×437 viewBox)
     ├── key.svg                # Potrace-traced skeleton key silhouette (1024×1024 viewBox) — falling object
     ├── watch.svg              # Potrace-traced pocket watch silhouette (1024×1024 viewBox) — falling object
-    ├── frame1.svg             # (Unused) Victorian looking glass frame — scrapped, kept in case of future reuse
-    └── frame2.svg             # (Unused) Victorian looking glass frame — scrapped, kept in case of future reuse
 public/
 └── projectImages/            # Project thumbnail images served at root path (Vite public/)
     ├── unfamiliar.webp
     ├── unfamiliarBoring.webp
     ├── singlePlayerCoOp.webp
+    ├── singlePlayerCoOpBoring.webp
     ├── foodMap.webp
-    └── annotationExtractor.webp
+    ├── foodMapBoring.webp
+    ├── annotationExtractor.webp
+    ├── annotationExtractorBoring.webp
+    └── watch.svg
 ```
 
 ## Tailwind Theme

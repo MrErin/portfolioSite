@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type ChangeEvent } from 'react';
 import { useWhimsy } from './WhimsyContext';
-import type { WhimsyLevel } from './WhimsyContext';
+import type { WhimsyLevel } from './whimsyTypes';
 
 const STOP_NAMES: Record<WhimsyLevel, string> = {
   0: 'Quarterly Review',

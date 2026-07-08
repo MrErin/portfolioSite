@@ -37,7 +37,7 @@
 ## Falling Objects
 
 - 6 Alice-themed SVG silhouettes (armchair, book, card, cup, key, watch) as background decoration
-- Stop 2 (parallax): 36 slots with scroll-linked positioning behind cards, colorized via CSS filter
+- Stop 2 (parallax): 24 slots with scroll-linked positioning behind cards, colorized via CSS filter
 - Stop 1 (grid): 6 fixed slots with sequential glow animation (~3.5s interval)
 - Stop 0, reduced motion, below md breakpoint: hidden entirely
 - Static mode vertical range capped at 55% to avoid cave floor overlap

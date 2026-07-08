@@ -7,7 +7,7 @@ import cupUrl from '@/assets/cup.svg';
 import keyUrl from '@/assets/key.svg';
 import watchUrl from '@/assets/watch.svg';
 import { projects } from '@/data/projects';
-import { getObjectScrollWindow } from './animationConfig';
+import { getObjectScrollWindow, FADE_MARGIN, lerp } from './animationConfig';
 
 const OBJECT_SOURCES = [armchairUrl, bookUrl, cardUrl, cupUrl, keyUrl, watchUrl] as const;
 
@@ -65,17 +65,14 @@ interface FallingObjectProps {
   mode: 'falling' | 'static';
 }
 
-/** Linear interpolation between two values based on normalized progress. */
-const lerp = (from: number, to: number, t: number): number => from + (to - from) * t;
-
 /**
  * 4-keyframe interpolation for opacity fade in/out.
  * Maps normalized progress [0→1] through: 0 → peak → peak → 0
  * with fade margins at 15% from each end.
  */
 const computeOpacity = (t: number, peak: number): number => {
-  const fadeIn = 0.15;
-  const fadeOut = 0.85;
+  const fadeIn = FADE_MARGIN;
+  const fadeOut = 1 - FADE_MARGIN;
   if (t <= 0 || t >= 1) return 0;
   if (t < fadeIn) return (t / fadeIn) * peak;
   if (t > fadeOut) return ((1 - t) / (1 - fadeOut)) * peak;
