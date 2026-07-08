@@ -15,7 +15,7 @@
 - At stop 0: ProjectCard and ProjectModal show `boringImageUrl` (or grey gradient fallback)
 - At stops 1–2: show `imageUrl` (or purple gradient fallback)
 - Broken images silently fall back to stop-appropriate gradient via `onError` state
-- Modal header is h-64 (256px) for image display
+- Modal header is h-92 (368px) for image display
 - Profile photo in AboutPanel uses `<img>` with error fallback to gradient placeholder
 - `boringImages` config flag drives image variant selection (not frame overlay visibility)
 
@@ -28,10 +28,10 @@
 
 ## Cave Floor
 
-- Cave floor SVG renders at stops 1 and 2, hidden at stop 0 and reduced motion
-- Stop 1 (grid): static image below card grid, edge-to-edge via `-mx-4`, h-64 with `object-cover object-bottom`
-- Stop 2 (parallax): inside sticky container with `useTransform([0.78, 0.95])` scroll-linked translateY reveal
-- Both stops use shared CSS constants for height, crop, and `mask-image` top-edge fade
+- Cave floor SVG renders at stops 1 and 2, hidden at stop 0 (boring mode) and reduced motion
+- Rendered via CSS `background-image` (not `<img>`) with `CAVE_FLOOR_DECORATIVE` and `CAVE_FLOOR_STYLE` constants
+- Stop 1 (grid): static below card grid with `h-[25vh]`, background-size 100% 100%
+- Stop 2 (parallax): inside sticky container with `useTransform([0.5, 0.6])` scroll-linked translateY reveal
 - Cave floor is `aria-hidden`, `pointer-events-none`, `select-none`, `draggable="false"`
 
 ## Falling Objects
