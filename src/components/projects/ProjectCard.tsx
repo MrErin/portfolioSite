@@ -1,5 +1,6 @@
-import { useRef, useState } from 'react';
-import { useWhimsy } from '@/components/whimsy/WhimsyContext';
+import { useRef } from 'react';
+import { useProjectImage } from './useProjectImage';
+import { TechBadges } from './TechBadges';
 import type { Project } from './types';
 
 interface ProjectCardProps {
@@ -9,15 +10,7 @@ interface ProjectCardProps {
 
 const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
   const articleRef = useRef<HTMLElement>(null);
-  const { config } = useWhimsy();
-  const [hasImageError, setHasImageError] = useState(false);
-
-  const activeImageUrl = config.boringImages ? project.boringImageUrl : project.imageUrl;
-  const showImage = activeImageUrl && !hasImageError;
-
-  const thumbnailClass = config.boringImages
-    ? 'bg-gradient-to-br from-boring-dark via-boring to-boring-light'
-    : 'bg-gradient-to-br from-hollow via-shade to-dusk';
+  const { showImage, activeUrl, gradientClass, onError } = useProjectImage(project);
 
   const handleClick = () => {
     if (onClick && articleRef.current) {
@@ -44,13 +37,13 @@ const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
       <div className="relative h-40 overflow-hidden">
         {showImage && (
           <img
-            src={activeImageUrl}
+            src={activeUrl}
             alt={project.name}
             className="object-cover object-center w-full h-full"
-            onError={() => setHasImageError(true)}
+            onError={onError}
           />
         )}
-        {!showImage && <div className={`absolute inset-0 ${thumbnailClass}`} aria-hidden="true" />}
+        {!showImage && <div className={`absolute inset-0 ${gradientClass}`} aria-hidden="true" />}
       </div>
 
       <div className="p-6">
@@ -58,16 +51,7 @@ const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
           {project.name}
         </h3>
 
-        <div className="flex flex-wrap gap-2">
-          {project.techStack.map((tech) => (
-            <span
-              key={tech}
-              className="px-2 py-1 text-xs text-purple-light bg-surface-dim border border-border rounded"
-            >
-              {tech}
-            </span>
-          ))}
-        </div>
+        <TechBadges techs={project.techStack} />
       </div>
     </article>
   );

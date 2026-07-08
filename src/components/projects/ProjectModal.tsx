@@ -1,9 +1,10 @@
-import { useState } from 'react';
 import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { FocusTrap } from 'focus-trap-react';
 import { useWhimsy } from '@/components/whimsy/WhimsyContext';
 import { CloseButton } from '@/components/core/CloseButton';
+import { useProjectImage } from './useProjectImage';
+import { TechBadges } from './TechBadges';
 import type { Project } from './types';
 
 const LINK_CLASS =
@@ -26,17 +27,8 @@ interface ProjectModalProps {
 
 const ProjectModal = ({ project, onClose, cardOrigin }: ProjectModalProps) => {
   const { config, level } = useWhimsy();
-  const [hasImageError, setHasImageError] = useState(false);
+  const { showImage, activeUrl, gradientClass, onError } = useProjectImage(project);
 
-  const activeImageUrl = config.boringImages ? project.boringImageUrl : project.imageUrl;
-  const showImage = activeImageUrl && !hasImageError;
-
-  const headerGradientClass = config.boringImages
-    ? 'bg-gradient-to-br from-boring-dark via-boring to-boring-light'
-    : 'bg-gradient-to-br from-hollow via-shade to-dusk';
-
-  // Grow-from-card: offset the initial position away from the click origin so the modal
-  // appears to expand from the card rather than from the center of the viewport.
   const viewportCenterX = typeof window !== 'undefined' ? window.innerWidth / 2 : 0;
   const viewportCenterY = typeof window !== 'undefined' ? window.innerHeight / 2 : 0;
   const offsetX = cardOrigin ? cardOrigin.x - viewportCenterX : 0;
@@ -87,15 +79,15 @@ const ProjectModal = ({ project, onClose, cardOrigin }: ProjectModalProps) => {
           <div className="relative h-92 overflow-hidden rounded-t-lg">
             {showImage && (
               <img
-                src={activeImageUrl}
+                src={activeUrl}
                 alt={project.name}
                 className="object-cover object-center w-full h-full rounded-t-lg"
-                onError={() => setHasImageError(true)}
+                onError={onError}
               />
             )}
             {!showImage && (
               <div
-                className={`absolute inset-0 ${headerGradientClass} rounded-t-lg`}
+                className={`absolute inset-0 ${gradientClass} rounded-t-lg`}
                 aria-hidden="true"
               />
             )}
@@ -108,15 +100,8 @@ const ProjectModal = ({ project, onClose, cardOrigin }: ProjectModalProps) => {
               {project.description}
             </p>
 
-            <div className="flex flex-wrap gap-2 mb-6">
-              {project.techStack.map((tech) => (
-                <span
-                  key={tech}
-                  className="px-3 py-1 text-sm text-purple-light bg-surface-dim border border-border rounded"
-                >
-                  {tech}
-                </span>
-              ))}
+            <div className="mb-6">
+              <TechBadges techs={project.techStack} size="md" />
             </div>
 
             {project.demoUrl && (
