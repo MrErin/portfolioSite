@@ -17,7 +17,8 @@ const useProjectImage = (project: Pick<Project, 'imageUrl' | 'boringImageUrl'>) 
   const { config } = useWhimsy();
   const [hasImageError, setHasImageError] = useState(false);
 
-  const activeUrl = config.boringImages ? project.boringImageUrl : project.imageUrl;
+  const rawUrl = config.boringImages ? project.boringImageUrl : project.imageUrl;
+  const activeUrl = rawUrl ? `${import.meta.env.BASE_URL}${rawUrl.replace(/^\//, '')}` : rawUrl;
   const showImage = activeUrl && !hasImageError;
   const gradientClass = config.boringImages ? BORING_GRADIENT : REGULAR_GRADIENT;
 
