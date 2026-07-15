@@ -3,7 +3,7 @@ import { useWhimsy } from './WhimsyContext';
 import type { WhimsyLevel } from './whimsyTypes';
 
 const STOP_NAMES: Record<WhimsyLevel, string> = {
-  0: 'Quarterly Review',
+  0: "Whimsy? I don't know her",
   1: 'Sensibly Strange',
   2: 'Curiouser and Curiouser',
 };
