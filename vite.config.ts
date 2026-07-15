@@ -5,7 +5,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/portfolioSite/',
+  base: '/',
   plugins: [react(), tailwindcss(), tsconfigPaths()],
   server: {
     open: true,
