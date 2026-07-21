@@ -4,7 +4,7 @@ export const projects: Project[] = [
   {
     id: 'unfamiliar',
     name: 'Unfamiliar',
-    description: 'AI powered codebase exploration tool that runs in the terminal. Privacy-first design analyzes a repository on your local machine and sends analysis data (not raw code) to the LLM you configure. The LLM structures mission chains and themes them, gamifying the process of learning a new codebase. Published on PyPi.',
+    description: 'AI powered codebase exploration tool that runs in the terminal. Privacy-first design analyzes a repository on your local machine and sends analysis data (not raw code) to the LLM you configure. The LLM structures mission chains and themes them, gamifying the process of learning a new codebase. Published on PyPI.',
     techStack: ['Python', 'Langchain/Langgraph', 'Textual'],
     imageUrl: '/projectImages/unfamiliar.webp',
     boringImageUrl: '/projectImages/unfamiliarBoring.webp',

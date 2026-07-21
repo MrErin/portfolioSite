@@ -39,7 +39,7 @@ const ContactPanel = () => {
                 <span className="text-gold" aria-hidden="true">
                   <FaEnvelope />
                 </span>
-                <span>Electromografied Mail</span>
+                <span>Email</span>
               </button>
             )}
           </li>

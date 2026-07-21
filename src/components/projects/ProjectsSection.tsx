@@ -1,6 +1,5 @@
 import { useRef } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
-import arrowUrl from '@/assets/arrow.svg';
 import caveFloorUrl from '@/assets/caveFloor.svg';
 import { ParticleField } from '@/components/core/ParticleField';
 import { useWhimsy } from '@/components/whimsy/WhimsyContext';
@@ -99,18 +98,6 @@ const ProjectsSection = ({ onProjectClick }: ProjectsSectionProps) => {
       className="relative bg-deep"
       style={{ height: `${SECTION_HEIGHT_VH}vh` }}
     >
-      {/* Arrow at the top of the scroll area — scrolls away naturally */}
-      <div className="flex flex-col items-center pt-4 pb-16 pointer-events-none">
-        <img
-          src={arrowUrl}
-          alt=""
-          aria-hidden="true"
-          draggable="false"
-          className="w-48 sm:w-64 h-auto select-none animate-scroll-bounce"
-          style={{ filter: 'invert(1)' }}
-        />
-      </div>
-
       <div className="sticky top-0 h-screen overflow-hidden flex items-center justify-center">
         <motion.div
           aria-hidden="true"

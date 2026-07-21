@@ -232,6 +232,11 @@ button {
   border: 1px solid var(--color-border);
   top: max(1rem, env(safe-area-inset-top));
   left: max(1rem, env(safe-area-inset-left));
+  /* Fixed width so the container doesn't reflow when stop name text changes length.
+     Chrome and Safari recalculate layout immediately on text change; Firefox is more
+     forgiving. 14rem accommodates the longest stop name ("Whimsy? I don't know her")
+     at 0.7rem/Raleway plus horizontal padding. */
+  min-width: 14rem;
   transition:
     padding 300ms ease,
     border-color 300ms ease,
@@ -243,6 +248,7 @@ button {
   padding: 0.3rem 0.5rem;
   opacity: 0.6;
   cursor: pointer;
+  min-width: 0;
 }
 
 .whimsy-slider--collapsed > input {
@@ -250,7 +256,9 @@ button {
   width: 1px;
   height: 1px;
   overflow: hidden;
-  clip: rect(0, 0, 0, 0);
+  clip: rect(0, 0, 0, 0); /* legacy; kept for IE compatibility */
+  clip-path: inset(50%); /* modern replacement; required for Safari/Chrome future */
+  white-space: nowrap;
 }
 
 .whimsy-slider--collapsed .whimsy-slider__stop-name {
@@ -310,6 +318,7 @@ button {
 .whimsy-range {
   -webkit-appearance: none;
   appearance: none;
+  width: 100%; /* range inputs have unstandardized default widths across browsers */
   min-height: 44px;
   background: transparent;
   cursor: pointer;
