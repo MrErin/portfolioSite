@@ -21,8 +21,13 @@ const Hero = () => {
       <ParticleField />
       <div className="text-center px-4">
         <h1 className="font-display text-gold text-4xl sm:text-5xl md:text-7xl lg:text-8xl mb-4">
-          {config.boringImages? 'Portfolio' : 'Rabbit Holes'}
+          {config.boringImages ? 'Portfolio' : "Rabbit Holes I've Fallen Down"}
         </h1>
+        {!config.boringImages && (
+          <p className="font-display text-gold text-xs sm:text-sm opacity-50 tracking-widest mt-6">
+            (scroll down)
+          </p>
+        )}
       </div>
     </section>
   );
